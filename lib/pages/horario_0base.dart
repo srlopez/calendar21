@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../models/detalle_model.dart';
-import '../providers/data.dart';
+import 'package:flutter/material.dart';
+
 import 'detalle_page.dart';
 
 class HorarioPage extends StatefulWidget {
@@ -17,8 +15,6 @@ class HorarioPage extends StatefulWidget {
 class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
-    var data = context.watch<CalendarData>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -75,15 +71,13 @@ class _HorarioPageState extends State<HorarioPage> {
                     flex: 1,
                     child: Column(
                       children: [
-                        for (var size in data.minutosBloque) ...[
-                          // [10, 10, 10]) ...[
+                        for (var size in [10, 10, 10]) ...[
                           Expanded(
                             flex: size,
                             child: Container(
-                              width: double.infinity,
                               color: Colors.amber,
                               padding: EdgeInsets.all(5),
-                              child: Text('$size'),
+                              child: Text('Hueco dse $size'),
                             ),
                           ),
                           Divider(
@@ -143,9 +137,5 @@ class _HorarioPageState extends State<HorarioPage> {
       ),
       */
     );
-
-    // return Consumer<CalendarData>(builder: (context, data, child) {
-    //   return scaffold;
-    // });
   }
 }
