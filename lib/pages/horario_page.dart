@@ -18,6 +18,11 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     var data = context.watch<CalendarData>();
+    final barraHeight = 40.0;
+    format(Duration d) {
+      var h = d.toString().split(':');
+      return '${h[0]}:${h[1]}';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +53,7 @@ class _HorarioPageState extends State<HorarioPage> {
               // }
             },
             child: SizedBox(
-                height: 40,
+                height: barraHeight,
                 child: Center(
                   child: Text('dias'),
                 )),
@@ -57,8 +62,8 @@ class _HorarioPageState extends State<HorarioPage> {
             height: MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.top -
                 kToolbarHeight -
-                40 -
-                40,
+                barraHeight -
+                barraHeight,
             child: Row(
               children: [
                 Container(
@@ -66,7 +71,7 @@ class _HorarioPageState extends State<HorarioPage> {
                   child: Column(
                     children: [
                       Text('horas'),
-                      Text('08:00'),
+                      Text(format(data.h0)),
                     ],
                   ),
                 ),
@@ -101,7 +106,7 @@ class _HorarioPageState extends State<HorarioPage> {
             ),
           ),
           SizedBox(
-              height: 40,
+              height: barraHeight,
               child: Center(
                 child: Text('pie'),
               )),

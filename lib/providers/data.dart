@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class CalendarData extends ChangeNotifier {
   // hora inicial
   final h0 = Duration(hours: 8, minutes: 0);
-
   // la lista de huecos (en minutos)
   var minutosHueco = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
   // lista de cantidad e huecos por bloque asignado
@@ -11,11 +12,22 @@ class CalendarData extends ChangeNotifier {
   // lista de tamaño de los bloques en minutos
   var minutosBloque = <int>[];
 
+  // Repositorio
+  CalendarStorage storage;
+
   CalendarData() {
-    // print('Constructor');
+    print('Constructor');
+
+    storage = CalendarStorage();
+    storage.readCalendar().then((l) {
+      print('==== from storage =====');
+      print(l);
+    });
+
     // print(minutosHueco);
     // print(huecosBloque);
     this.calcularMinutosBloque();
+
     // print(minutosBloque);
   }
 
@@ -31,7 +43,6 @@ class CalendarData extends ChangeNotifier {
       minutosBloque.add(s);
       s = 0;
     });
-
     // print('====');
     // print(minutosHueco);
     // print(huecosBloque);
@@ -42,6 +53,7 @@ class CalendarData extends ChangeNotifier {
     assert(minutosBloque.reduce((a, b) => a + b) ==
         minutosHueco.reduce((a, b) => a + b));
     notifyListeners();
+    storage.writeCalendar(minutosBloque);
   }
 
   void quitarBloque(int i) {
@@ -73,5 +85,38 @@ class CalendarData extends ChangeNotifier {
     calcularMinutosBloque();
 
     notifyListeners();
+  }
+}
+
+class CalendarStorage {
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/calendar.txt');
+  }
+
+  Future<List<int>> readCalendar() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      String contents = await file.readAsString();
+      var l = contents.substring(1, contents.length - 1).split(',');
+      return l.map((i) => int.parse(i)).toList();
+    } catch (e) {
+      return [60];
+    }
+  }
+
+  Future<File> writeCalendar(List<int> l) async {
+    final file = await _localFile;
+
+    // Write the file
+    return file.writeAsString(l.toString());
   }
 }
