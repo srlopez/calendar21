@@ -31,6 +31,7 @@ class _HorarioPageState extends State<HorarioPage> {
       ),
       body: Column(
         children: [
+          /*
           GestureDetector(
             onTap: () async {
               var detalle = Detalle();
@@ -53,108 +54,102 @@ class _HorarioPageState extends State<HorarioPage> {
 
               // }
             },
-            child: SizedBox(
-                height: barraHeight,
-                child: Center(
-                  child: Text('dias'),
-                )),
-          ),
+            
+            child: */
+          SizedBox(
+              height: barraHeight,
+              child: Center(
+                child: Text('dias'),
+              )),
+          // ),//Gesture
           Container(
             height: MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.top -
                 kToolbarHeight -
-                barraHeight -
                 barraHeight,
             child: Row(
               children: [
-                Container(
-                  width: 60,
-                  child: Column(
-                    children: [
-                      Text('horas'),
-                      Text(format(data.h0)),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      //Columna de HORAS
+                      width: 60,
+                      padding: EdgeInsets.only(right: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(format(data.h0)),
+
+                          for (var i = 0,
+                                  t = data.h0 +
+                                      Duration(minutes: data.minutosHueco[i]);
+                              i < data.minutosHueco.length - 1;
+                              t += Duration(
+                                  minutes: data.minutosHueco[i++])) ...[
+                            Expanded(
+                                flex: data.minutosHueco[i],
+                                child: CuadroWidget(
+                                    size:
+                                        data.minutosHueco[i]) //Text(format(t)),
+                                ),
+                          ]
+                          //Text(format(data.h0)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 for (var i = 0; i < 5; i++) ...[
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        for (var size in data.minutosBloque) ...[
-                          // [10, 10, 10]) ...[
-                          Expanded(
-                            flex: size,
-
-                            /* child: Container(
-                              width: double.infinity,
-                              color: Colors.amber,
-                              padding: EdgeInsets.all(5),
-                              child: Text('$size'),
-                            ), */
-
-                            child: CuadroWidget(size: size),
-                          ),
-                          Divider(
-                            height: 2,
-                          )
-                        ]
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 2,
-                  )
+                  ColumnaDiaria(data: data),
+                  SizedBox(width: 2)
                 ],
               ],
             ),
           ),
-          SizedBox(
-              height: barraHeight,
-              child: Center(
-                child: Text('pie'),
-              )),
+          //SizedBox(height: barraHeight, child: Center(child: Text('pie'))),
         ],
       ),
-      /*
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text('UNO'),
-                    Text('DOS'),
-                    Expanded(
-                        flex: 1,
-                        child: Container(
-                          width: 0,
-                          height: 0,
-                        )),
-                    Text('TRES'),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ))
-          ],
-        ),
-      ),
-      */
     );
 
     // return Consumer<CalendarData>(builder: (context, data, child) {
     //   return scaffold;
     // });
+  }
+}
+
+class ColumnaDiaria extends StatelessWidget {
+  const ColumnaDiaria({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
+
+  final CalendarData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: Column(
+        children: [
+          for (var size in data.minutosBloque) ...[
+            // [10, 10, 10]) ...[
+            Expanded(
+              flex: size,
+
+              /* child: Container(
+                width: double.infinity,
+                color: Colors.amber,
+                padding: EdgeInsets.all(5),
+                child: Text('$size'),
+              ), */
+
+              child: CuadroWidget(size: size),
+            ),
+            Divider(height: 2)
+          ],
+          SizedBox(height: 40, child: Placeholder()),
+        ],
+      ),
+    );
   }
 }

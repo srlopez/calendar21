@@ -12,26 +12,23 @@ class CuadroWidget extends StatelessWidget {
       //height: 200,
       decoration: BoxDecoration(
         color: Colors.amber,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
+      //child: ClipRect(
+      //El error no se sale de la columna
+      clipBehavior: Clip.hardEdge,
       child: Column(
+        //crossAxisAlignment: CrossAxisAlignment.stretch,
+        //mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            '$size',
-            overflow: TextOverflow.clip,
-            //softWrap: false,
-          ),
-          Text('DOS'),
-          Expanded(
-              flex: 1,
-              child: Container(
-                width: 0,
-                height: 0,
-              )),
-          Text('TRES'),
+          Text('$size', overflow: TextOverflow.clip),
+          Text('DOS', overflow: TextOverflow.clip),
+          Expanded(child: Container(width: 0, height: 0)),
+          Text('TRES', overflow: TextOverflow.clip),
         ],
       ),
+      //),
     );
   }
 }
