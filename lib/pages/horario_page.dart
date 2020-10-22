@@ -57,10 +57,10 @@ class _HorarioPageState extends State<HorarioPage> {
             
             child: */
           SizedBox(
-              height: barraHeight,
-              child: Center(
-                child: Text('dias'),
-              )),
+            //hueco ar dias
+            height: barraHeight,
+            child: Placeholder(),
+          ),
           // ),//Gesture
           Container(
             height: MediaQuery.of(context).size.height -
@@ -79,21 +79,26 @@ class _HorarioPageState extends State<HorarioPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(format(data.h0)),
-
-                          for (var i = 0,
+                          SizedBox(height: 5),
+                          for (var i = 1,
                                   t = data.h0 +
-                                      Duration(minutes: data.minutosHueco[i]);
-                              i < data.minutosHueco.length - 1;
+                                      Duration(minutes: data.minutosHueco[0]);
+                              i < data.minutosHueco.length;
                               t += Duration(
-                                  minutes: data.minutosHueco[i++])) ...[
+                                  minutes: data.minutosHueco[i++]),) ...[
                             Expanded(
                                 flex: data.minutosHueco[i],
-                                child: CuadroWidget(
-                                    size:
-                                        data.minutosHueco[i]) //Text(format(t)),
+                                child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                    clipBehavior: Clip.none,
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    alignment: Alignment.topRight,
+                                    //color: Colors.indigoAccent,
+                                    child: Text(format(t))) //Text(format(t)),
                                 ),
-                          ]
-                          //Text(format(data.h0)),
+                          ],
+                          Text(format(data.h0)),
+                          SizedBox(height: 30)
                         ],
                       ),
                     ),
@@ -131,18 +136,10 @@ class ColumnaDiaria extends StatelessWidget {
       flex: 1,
       child: Column(
         children: [
+          SizedBox(height: 10), //Gap para ajustar la hora
           for (var size in data.minutosBloque) ...[
-            // [10, 10, 10]) ...[
             Expanded(
               flex: size,
-
-              /* child: Container(
-                width: double.infinity,
-                color: Colors.amber,
-                padding: EdgeInsets.all(5),
-                child: Text('$size'),
-              ), */
-
               child: CuadroWidget(size: size),
             ),
             Divider(height: 2)

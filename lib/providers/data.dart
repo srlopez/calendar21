@@ -9,6 +9,7 @@ class CalendarData extends ChangeNotifier {
   var minutosHueco = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
   // lista de cantidad e huecos por bloque asignado
   var huecosBloque = [1, 2, 3, 1, 2, 1, 1];
+  //var huecosBloque = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   // lista de tamaño de los bloques en minutos
   var minutosBloque = <int>[];
 
@@ -28,7 +29,17 @@ class CalendarData extends ChangeNotifier {
     // print(huecosBloque);
     this.calcularMinutosBloque();
 
-    // print(minutosBloque);
+    print(minutosBloque);
+    printHoras();
+  }
+
+  void printHoras() {
+    var t = h0;
+    for (var i = 0; i < minutosHueco.length; i++) {
+      print(t);
+      t += Duration(minutes: minutosHueco[i]);
+    }
+    print(t);
   }
 
   void calcularMinutosBloque() {
@@ -41,6 +52,7 @@ class CalendarData extends ChangeNotifier {
       i += o;
 
       minutosBloque.add(s);
+
       s = 0;
     });
     // print('====');
