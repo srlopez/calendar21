@@ -1,3 +1,4 @@
+import 'package:calendar21/pages/cuadro_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -84,12 +85,15 @@ class _HorarioPageState extends State<HorarioPage> {
                           // [10, 10, 10]) ...[
                           Expanded(
                             flex: size,
-                            child: Container(
+
+                            /* child: Container(
                               width: double.infinity,
                               color: Colors.amber,
                               padding: EdgeInsets.all(5),
                               child: Text('$size'),
-                            ),
+                            ), */
+
+                            child: CuadroWidget(size: size),
                           ),
                           Divider(
                             height: 2,
