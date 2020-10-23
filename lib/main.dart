@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
     );
 
     // Lo recubrimos con un Proveedor de Notificaciones
-    return ChangeNotifierProvider<CalendarData>(
-      create: (context) => CalendarData(),
+    return ChangeNotifierProvider<HorarioData>(
+      create: (context) => HorarioData(),
       child: app,
     );
   }

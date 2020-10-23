@@ -18,7 +18,7 @@ class HorarioPage extends StatefulWidget {
 class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
-    var data = context.watch<CalendarData>();
+    var data = context.watch<HorarioData>();
     final barraHeight = 40.0;
     format(Duration d) {
       var h = d.toString().split(':');

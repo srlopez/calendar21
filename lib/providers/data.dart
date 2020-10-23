@@ -2,32 +2,58 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-class CalendarData extends ChangeNotifier {
+// Cuadro a dibujar
+class Cuadro {
+  int nhuecos; // numero de huecos que ocupa
+  int clase; // -1 no asigando
+  int minutos; // numero de minutos asignados
+  Cuadro(this.nhuecos, [this.minutos = 0, this.clase = 0]);
+
+  @override
+  String toString() {
+    //return '$size; $minutes; $type; $color';
+    return '$nhuecos/$minutos';
+  }
+
+  Cuadro.fromString(String s) {
+    //Bloc(0);
+    var member = s.split('/');
+    this.nhuecos = int.parse(member[0]);
+    this.minutos = int.parse(member[1]);
+  }
+}
+
+class HorarioData extends ChangeNotifier {
   // hora inicial
   final h0 = Duration(hours: 8, minutes: 0);
-  // la lista de huecos (en minutos)
-  var minutosHueco = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
+
+  // tamaño de 'huecos' en minutos
+  var huecos = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
+
+  // almacena los cuadros asignados en el horario de Lunes a Viernes
+  var horario = List<List<Cuadro>>(5);
+
   // lista de cantidad e huecos por bloque asignado
   var huecosBloque = [1, 2, 3, 1, 2, 1, 1];
   //var huecosBloque = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   // lista de tamaño de los bloques en minutos
   var minutosBloque = <int>[];
 
-  // Repositorio
-  CalendarStorage storage;
+  // Repositorio File
+  HorarioStorage storage;
 
-  CalendarData() {
+  HorarioData() {
     print('Constructor');
 
-    storage = CalendarStorage();
-    storage.readCalendar().then((l) {
+    storage = HorarioStorage();
+    storage.readHorario().then((l) {
       print('==== from storage =====');
       print(l);
     });
 
-    // print(minutosHueco);
+    // print(huecos);
     // print(huecosBloque);
-    this.calcularMinutosBloque();
+    this.ABORRARcalcularMinutosBloque();
 
     print(minutosBloque);
     printHoras();
@@ -35,20 +61,20 @@ class CalendarData extends ChangeNotifier {
 
   void printHoras() {
     var t = h0;
-    for (var i = 0; i < minutosHueco.length; i++) {
+    for (var i = 0; i < huecos.length; i++) {
       print(t);
-      t += Duration(minutes: minutosHueco[i]);
+      t += Duration(minutes: huecos[i]);
     }
     print(t);
   }
 
-  void calcularMinutosBloque() {
-    assert(minutosHueco.length == huecosBloque.reduce((a, b) => a + b));
+  void ABORRARcalcularMinutosBloque() {
+    assert(huecos.length == huecosBloque.reduce((a, b) => a + b));
     num i = 0; // indice
     num s = 0; // size
     minutosBloque.clear();
     huecosBloque.forEach((num o) {
-      for (var j = i; j < i + o; j++) s += minutosHueco[j];
+      for (var j = i; j < i + o; j++) s += huecos[j];
       i += o;
 
       minutosBloque.add(s);
@@ -56,16 +82,16 @@ class CalendarData extends ChangeNotifier {
       s = 0;
     });
     // print('====');
-    // print(minutosHueco);
+    // print(huecos);
     // print(huecosBloque);
     // print(minutosBloque);
     // print(minutosBloque.reduce((a, b) => a + b));
-    // print(minutosHueco.reduce((a, b) => a + b));
+    // print(huecos.reduce((a, b) => a + b));
 
     assert(minutosBloque.reduce((a, b) => a + b) ==
-        minutosHueco.reduce((a, b) => a + b));
+        huecos.reduce((a, b) => a + b));
     notifyListeners();
-    storage.writeCalendar(minutosBloque);
+    storage.writeHorario(minutosBloque);
   }
 
   void quitarBloque(int i) {
@@ -100,7 +126,10 @@ class CalendarData extends ChangeNotifier {
   }
 }
 
-class CalendarStorage {
+// ========================================
+
+// ========================================
+class HorarioStorage {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -109,10 +138,10 @@ class CalendarStorage {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/calendar.txt');
+    return File('$path/Horario.txt');
   }
 
-  Future<List<int>> readCalendar() async {
+  Future<List<int>> readHorario() async {
     try {
       final file = await _localFile;
 
@@ -125,7 +154,7 @@ class CalendarStorage {
     }
   }
 
-  Future<File> writeCalendar(List<int> l) async {
+  Future<File> writeHorario(List<int> l) async {
     final file = await _localFile;
 
     // Write the file
