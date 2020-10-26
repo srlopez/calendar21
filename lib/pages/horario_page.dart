@@ -82,12 +82,11 @@ class _HorarioPageState extends State<HorarioPage> {
                           SizedBox(height: 5),
                           for (var i = 1,
                                   t = data.h0 +
-                                      Duration(minutes: data.minutosHueco[0]);
-                              i < data.minutosHueco.length;
-                              t += Duration(
-                                  minutes: data.minutosHueco[i++]),) ...[
+                                      Duration(minutes: data.huecos[0]);
+                              i < data.huecos.length;
+                              t += Duration(minutes: data.huecos[i++]),) ...[
                             Expanded(
-                                flex: data.minutosHueco[i],
+                                flex: data.huecos[i],
                                 child: Container(
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
                                     clipBehavior: Clip.none,
@@ -105,7 +104,7 @@ class _HorarioPageState extends State<HorarioPage> {
                   ],
                 ),
                 for (var i = 0; i < 5; i++) ...[
-                  ColumnaDiaria(data: data),
+                  ColumnaDiaria(dia: data.horario[i]),
                   SizedBox(width: 2)
                 ],
               ],
@@ -125,10 +124,10 @@ class _HorarioPageState extends State<HorarioPage> {
 class ColumnaDiaria extends StatelessWidget {
   const ColumnaDiaria({
     Key key,
-    @required this.data,
+    @required this.dia,
   }) : super(key: key);
 
-  final HorarioData data;
+  final List<Cuadro> dia;
 
   @override
   Widget build(BuildContext context) {
@@ -137,12 +136,12 @@ class ColumnaDiaria extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 10), //Gap para ajustar la hora
-          for (var size in data.minutosBloque) ...[
+          for (var cuadro in dia) ...[
             Expanded(
-              flex: size,
-              child: CuadroWidget(size: size),
+              flex: cuadro.minutos,
+              child: CuadroWidget(cuadro: cuadro),
             ),
-            Divider(height: 2)
+            //Divider(height: 2)
           ],
           SizedBox(height: 40, child: Placeholder()),
         ],

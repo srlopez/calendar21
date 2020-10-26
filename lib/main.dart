@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/horario_page.dart';
-import 'package:calendar21/providers/data.dart';
+import 'providers/data.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var data = HorarioData();
+  await data.init(); //invocamos la creacion sincrona
+  runApp(MyApp(data: data));
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({Key key, this.data}) : super(key: key);
+
+  final HorarioData data;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -22,8 +29,12 @@ class MyApp extends StatelessWidget {
     );
 
     // Lo recubrimos con un Proveedor de Notificaciones
-    return ChangeNotifierProvider<HorarioData>(
-      create: (context) => HorarioData(),
+    // return ChangeNotifierProvider<HorarioData>(
+    //   create: (context) => HorarioData(),
+    //   child: app,
+    // );
+    return ChangeNotifierProvider<HorarioData>.value(
+      value: data,
       child: app,
     );
   }

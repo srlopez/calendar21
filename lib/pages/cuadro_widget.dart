@@ -1,9 +1,10 @@
+import 'package:calendar21/providers/data.dart';
 import 'package:flutter/material.dart';
 
 class CuadroWidget extends StatelessWidget {
-  const CuadroWidget({Key key, this.size}) : super(key: key);
+  const CuadroWidget({Key key, this.cuadro}) : super(key: key);
 
-  final int size;
+  final Cuadro cuadro;
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +16,19 @@ class CuadroWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
+      margin: EdgeInsets.only(bottom: 2),
       //child: ClipRect(
       //El error no se sale de la columna
       clipBehavior: Clip.hardEdge,
       child: Column(
+        // TODO: Mejorar la presentación ListView?¿?¿?
         //crossAxisAlignment: CrossAxisAlignment.stretch,
         //mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('$size', overflow: TextOverflow.clip),
-          Text('DOS', overflow: TextOverflow.clip),
+          Text('${cuadro.minutos}', overflow: TextOverflow.clip),
+          Text('subtitu', overflow: TextOverflow.clip),
           Expanded(child: Container(width: 0, height: 0)),
-          Text('TRES', overflow: TextOverflow.clip),
+          Text('pie', overflow: TextOverflow.clip),
         ],
       ),
       //),
