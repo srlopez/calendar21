@@ -12,7 +12,7 @@ class CuadroWidget extends StatelessWidget {
       width: double.infinity,
       //height: 200,
       decoration: BoxDecoration(
-        color: Colors.amber,
+        color: cuadro.clase >= 0 ? Colors.amber : Colors.cyan,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
@@ -25,10 +25,10 @@ class CuadroWidget extends StatelessWidget {
         //crossAxisAlignment: CrossAxisAlignment.stretch,
         //mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('${cuadro.minutos}', overflow: TextOverflow.clip),
-          Text('subtitu', overflow: TextOverflow.clip),
+          Text('${cuadro.titulo}', overflow: TextOverflow.clip),
+          Text('${cuadro.subtitulo}', overflow: TextOverflow.clip),
           Expanded(child: Container(width: 0, height: 0)),
-          Text('pie', overflow: TextOverflow.clip),
+          Text('${cuadro.pie}', overflow: TextOverflow.clip),
         ],
       ),
       //),

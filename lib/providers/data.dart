@@ -1,23 +1,38 @@
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'dart:convert';
+// import 'dart:convert';
 
 // Cuadro a dibujar
 class Cuadro {
   int nhuecos; // numero de huecos que ocupa
   int clase; // -1 no asigando
   int minutos; // numero de minutos asignados
-  Cuadro(this.nhuecos, [this.minutos = 0, this.clase = -1]);
+  String titulo;
+  String subtitulo;
+  String pie;
+  int color;
+  Cuadro(this.nhuecos,
+      [this.minutos = 0,
+      this.clase = -1,
+      this.titulo = '',
+      this.subtitulo = '',
+      this.pie = '',
+      this.color = 0]);
 
   @override
-  String toString() => '$nhuecos/$minutos/$clase';
+  String toString() =>
+      '$nhuecos/$minutos/$clase/$titulo/$subtitulo/$pie/$color';
 
   Cuadro.fromString(String s) {
     var member = s.split('/');
     this.nhuecos = int.parse(member[0]);
     this.minutos = int.parse(member[1]);
     this.clase = int.parse(member[2]);
+    this.titulo = member[3];
+    this.subtitulo = member[4];
+    this.pie = member[5];
+    this.color = int.parse(member[6]);
   }
 }
 
@@ -34,6 +49,9 @@ class HorarioData extends ChangeNotifier {
 
   // Almacena los cuadros asignados en el horario de Lunes a Viernes
   var horario = List<List<Cuadro>>(5);
+
+  // Los patrones de ID TITULO/SUBTITULO/PIE/COLOR
+  //var clase = Map<String, int>();
 
   // ===============  METODOS ================
   /// Calcula los minutos de un cuadro
@@ -61,7 +79,7 @@ class HorarioData extends ChangeNotifier {
 
   /// Reasignamos un Cuadro
   /// El Cuadro debe estar vacio (nhuecos=1 y clase=-1)
-  void reasignaCuadro(int dia, int iCuadro, int nHuecos) {
+  void reasignaCuadro(int dia, int iCuadro, int nHuecos, [int clase = 0]) {
     // print(
     //    '$dia;$iCuadro;$nHuecos - ${horario[dia][iCuadro].nhuecos};${horario[dia][iCuadro].clase}');
     //assert(horario[dia][iCuadro].nhuecos == 1);
@@ -80,7 +98,7 @@ class HorarioData extends ChangeNotifier {
       var cuadro;
 
       if (i == iCuadro) {
-        cuadro = Cuadro(nuevonhuecos, nuevominutos); //, -1, 0);
+        cuadro = Cuadro(nuevonhuecos, nuevominutos, clase); //, -1, 0);
         i += nHuecos - 1; //salta los cuadros que este agrupa
       } else
         cuadro = horario[dia][i];
@@ -182,13 +200,15 @@ class HorarioData extends ChangeNotifier {
     n = 3;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaCuadro(d, n, l);
+    reasignaCuadro(d, n, l, 2);
     //print(horario[d]);
 
     n = 6;
     //print('--------- quitar $d:$n ----------');
     quitarCuadro(d, n);
     //print(horario[d]);
+
+    reasignaCuadro(d, 6, 3, 1);
   }
 
   // ===================   CONSTRUCTOR =======================
@@ -219,16 +239,21 @@ class HorarioStorage {
     return directory.path;
   }
 
-  Future<File> get _localFile async {
+  Future<File> get _localHorarioFile async {
     final path = await _localPath;
     return File('$path/Horario.txt');
   }
+
+  // Future<File> get _localClaseFile async {
+  //   final path = await _localPath;
+  //   return File('$path/Clase.json');
+  // }
 
   Future<List<List<Cuadro>>> leerHorario() async {
     try {
       var h = List<List<Cuadro>>(5);
       var d = -1;
-      final file = await _localFile;
+      final file = await _localHorarioFile;
       //  String contents = await file.readAsString();
       //  print(contents);
       List<String> lines = file.readAsLinesSync();
@@ -257,7 +282,7 @@ class HorarioStorage {
   // }
 
   Future<File> escribirHorario(List<List<Cuadro>> l) async {
-    final file = await _localFile;
+    final file = await _localHorarioFile;
     var sb = StringBuffer();
 
     for (var d = 0; d < l.length; d++) {
@@ -270,4 +295,20 @@ class HorarioStorage {
     return file.writeAsString(sb.toString());
     //return  file.writeAsStringSync(sb.toString());
   }
+
+  // Future<Map<String, int>> leerClases() async {
+  //   try {
+  //     var d = -1;
+  //     final file = await _localClaseFile;
+  //     return jsonDecode(await file.readAsString());
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return {};
+  //   }
+  // }
+
+  // Future<File> escribirClase(Map<String, int> m) async {
+  //   final file = await _localHorarioFile;
+  //   return file.writeAsString(jsonEncode(m).toString());
+  // }
 }
