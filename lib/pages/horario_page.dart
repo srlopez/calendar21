@@ -1,3 +1,4 @@
+import 'package:calendar21/models/actividad_model.dart';
 import 'package:calendar21/pages/actividad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,31 +32,6 @@ class _HorarioPageState extends State<HorarioPage> {
       ),
       body: Column(
         children: [
-          /*
-          GestureDetector(
-            onTap: () async {
-              var detalle = Detalle();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (_) => DetallePage(detalle: detalle)))
-                  .then(
-                (response) {
-                  print(response?.titulo);
-                },
-              );
-              // Detalle response = await Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => DetallePage(),
-              //   ),
-              // );
-              // if (response != null) {
-              //   /// Validas si la pantalla se cierra sin mandar datos
-
-              // }
-            },
-            
-            child: */
           SizedBox(
             //hueco ar dias
             height: barraHeight,
@@ -104,7 +80,11 @@ class _HorarioPageState extends State<HorarioPage> {
                   ],
                 ),
                 for (var i = 0; i < 5; i++) ...[
-                  ColumnaDiaria(iDia: i, dia: data.horario[i]),
+                  Consumer<HorarioData>(
+                    builder: (context, data, child) {
+                      return ColumnaDiaria(iDia: i, dia: data.horario[i]);
+                    },
+                  ),
                   SizedBox(width: 2)
                 ],
               ],
@@ -147,23 +127,24 @@ class ColumnaDiaria extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   // Página de detalle
-// vemos donde estamos
-                  print('dia: $iDia');
-                  print('act: $iAct');
-
                   var detalle = Detalle(
-                    data: context.read<HorarioData>(),
-                    iDia: iDia,
-                    iActividad: iAct,
+                      data: context.read<HorarioData>(),
+                      iDia: iDia,
+                      iActividad: iAct);
+                  Actividad response = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetallePage(detalle: detalle),
+                    ),
                   );
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (_) => DetallePage(detalle: detalle)))
-                      .then(
-                    (response) {
-                      print(response?.titulo);
-                    },
-                  );
+                  if (response != null) {
+                    //Actuamos
+                    var data = context.read<HorarioData>();
+                    data.quitarActividad(iDia, iAct);
+                    //data.reasignaActividad(iDia, iAct, response.nhuecos);
+                    if (response.asignada)
+                      data.nuevaActividad(iDia, iAct, response);
+                  }
                 },
                 child: ActividadWidget(actividad: dia[iAct]),
               ),

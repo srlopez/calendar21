@@ -1,40 +1,8 @@
+import '../models/actividad_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 // import 'dart:convert';
-
-// Actividad a dibujar
-class Actividad {
-  int nhuecos; // numero de huecos que ocupa
-  int clase; // -1 no asigando
-  int minutos; // numero de minutos asignados
-  String titulo;
-  String subtitulo;
-  String pie;
-  int color;
-  Actividad(this.nhuecos,
-      [this.minutos = 0,
-      this.clase = -1,
-      this.titulo = '',
-      this.subtitulo = '',
-      this.pie = '',
-      this.color = 0]);
-
-  @override
-  String toString() =>
-      '$nhuecos/$minutos/$clase/$titulo/$subtitulo/$pie/$color';
-
-  Actividad.fromString(String s) {
-    var member = s.split('/');
-    this.nhuecos = int.parse(member[0]);
-    this.minutos = int.parse(member[1]);
-    this.clase = int.parse(member[2]);
-    this.titulo = member[3];
-    this.subtitulo = member[4];
-    this.pie = member[5];
-    this.color = int.parse(member[6]);
-  }
-}
 
 class HorarioData extends ChangeNotifier {
   // ===============  MIEMBROS ==============
@@ -47,11 +15,8 @@ class HorarioData extends ChangeNotifier {
   // Tamaño de 'huecos' en minutos
   var huecos = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
 
-  // Almacena los actividads asignados en el horario de Lunes a Viernes
+  // Almacena los actividades asignados en el horario de Lunes a Viernes
   var horario = List<List<Actividad>>(5);
-
-  // Los patrones de ID TITULO/SUBTITULO/PIE/COLOR
-  //var clase = Map<String, int>();
 
   // ===============  METODOS ================
   /// Calcula los minutos de un actividad
@@ -65,7 +30,7 @@ class HorarioData extends ChangeNotifier {
   // Pongo en un día tantos actividads como huecos tenemos = Reset
   void resetDia(dia) {
     horario[dia] = [];
-    huecos.forEach((minutos) => horario[dia].add(Actividad(1, minutos, -1)));
+    huecos.forEach((minutos) => horario[dia].add(Actividad(1, minutos, false)));
   }
 
   // Me recalcula actividads en minutos del día d
@@ -79,8 +44,43 @@ class HorarioData extends ChangeNotifier {
 
   /// Reasignamos un Actividad
   /// El Actividad debe estar vacio (nhuecos=1 y clase=-1)
+  void nuevaActividad(int dia, int iActividad, Actividad act) {
+    // print(
+    //    '$dia;$iActividad;$nHuecos - ${horario[dia][iActividad].nhuecos};${horario[dia][iActividad].clase}');
+    //assert(horario[dia][iActividad].nhuecos == 1);
+    //assert(horario[dia][iActividad].clase == -1);
+    // la longitud asignado <= total actividads del día
+    assert((iActividad + act.nhuecos) <= horario[dia].length);
+
+    var list = <Actividad>[];
+    var nuevonhuecos = 0;
+    var nuevominutos = 0;
+    for (var i = iActividad; i < iActividad + act.nhuecos; i++) {
+      nuevonhuecos += horario[dia][i].nhuecos;
+      nuevominutos += horario[dia][i].minutos;
+    }
+    for (var i = 0; i < horario[dia].length; i++) {
+      var actividad;
+
+      if (i == iActividad) {
+        //actividad = Actividad(nuevonhuecos, nuevominutos, clase); //, -1, 0);
+        actividad = act;
+        actividad.nhuecos = nuevonhuecos;
+        actividad.minutos = nuevominutos;
+        i += act.nhuecos - 1; //salta los actividads que este agrupa
+      } else
+        actividad = horario[dia][i];
+
+      list.add(actividad);
+    }
+    horario[dia] = list;
+
+    notifyListeners();
+    storage.escribirHorario(horario);
+  }
+
   void reasignaActividad(int dia, int iActividad, int nHuecos,
-      [int clase = 0]) {
+      [bool clase = false]) {
     // print(
     //    '$dia;$iActividad;$nHuecos - ${horario[dia][iActividad].nhuecos};${horario[dia][iActividad].clase}');
     //assert(horario[dia][iActividad].nhuecos == 1);
@@ -109,7 +109,7 @@ class HorarioData extends ChangeNotifier {
     horario[dia] = list;
 
     notifyListeners();
-    //storage.escribirHorario(horario);
+    storage.escribirHorario(horario);
   }
 
   /// Eliminamos un Actividad de un día
@@ -133,6 +133,7 @@ class HorarioData extends ChangeNotifier {
     horario[dia] = nuevaLista;
 
     notifyListeners();
+    storage.escribirHorario(horario);
   }
 
   void test() {
@@ -201,7 +202,7 @@ class HorarioData extends ChangeNotifier {
     n = 3;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaActividad(d, n, l, 2);
+    reasignaActividad(d, n, l, true);
     //print(horario[d]);
 
     n = 6;
@@ -209,7 +210,7 @@ class HorarioData extends ChangeNotifier {
     quitarActividad(d, n);
     //print(horario[d]);
 
-    reasignaActividad(d, 6, 3, 1);
+    reasignaActividad(d, 6, 3, true);
   }
 
   // ===================   CONSTRUCTOR =======================
@@ -218,15 +219,15 @@ class HorarioData extends ChangeNotifier {
     print('Constructor async');
     storage = HorarioStorage();
 
-    for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
-    test();
+    // for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
+    // test();
     //print(horario);
 
-    await storage.escribirHorario(horario);
+    //await storage.escribirHorario(horario);
     horario = await storage.leerHorario();
 
-    print('======CONSTRUCTOR =====');
-    print(horario);
+    //print('======CONSTRUCTOR =====');
+    //print(horario);
   }
 }
 
@@ -290,8 +291,6 @@ class HorarioStorage {
       var s = l[d].toString();
       sb.writeln(s.substring(1, s.length - 1));
     }
-    print('====escribir======');
-    print(sb.toString());
     // Write the file
     return file.writeAsString(sb.toString());
     //return  file.writeAsStringSync(sb.toString());

@@ -1,4 +1,4 @@
-import 'package:calendar21/providers/data.dart';
+import '../models/actividad_model.dart';
 import 'package:flutter/material.dart';
 
 class ActividadWidget extends StatelessWidget {
@@ -12,7 +12,7 @@ class ActividadWidget extends StatelessWidget {
       width: double.infinity,
       //height: 200,
       decoration: BoxDecoration(
-        color: actividad.clase >= 0 ? Colors.amber : Colors.cyan,
+        color: actividad.asignada ? Colors.amber : Colors.cyan,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
@@ -20,17 +20,22 @@ class ActividadWidget extends StatelessWidget {
       //child: ClipRect(
       //El error no se sale de la columna
       clipBehavior: Clip.hardEdge,
-      child: ListView(
-        // TODO: Mejorar la presentación ListView/Column?¿?¿?
-        //crossAxisAlignment: CrossAxisAlignment.stretch,
-        //mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text('${actividad.titulo}', overflow: TextOverflow.clip),
-          Text('${actividad.subtitulo}', overflow: TextOverflow.clip),
-          Expanded(child: Container(width: 0, height: 0)),
-          Text('${actividad.pie}', overflow: TextOverflow.clip),
-        ],
-      ),
+      child: actividad.asignada
+          ? Column(
+              // TODO: Mejorar la presentación ListView/Column?¿?¿?
+              //crossAxisAlignment: CrossAxisAlignment.stretch,
+              //mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('${actividad.titulo}', overflow: TextOverflow.clip),
+                Text('${actividad.subtitulo}', overflow: TextOverflow.clip),
+                Expanded(child: Container(width: 0, height: 0)),
+                Text('${actividad.pie}', overflow: TextOverflow.clip),
+              ],
+            )
+          : Container(
+              width: double.infinity,
+              height: double.infinity,
+            ),
       //),
     );
   }
