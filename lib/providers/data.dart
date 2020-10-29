@@ -3,8 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 // import 'dart:convert';
 
-// Cuadro a dibujar
-class Cuadro {
+// Actividad a dibujar
+class Actividad {
   int nhuecos; // numero de huecos que ocupa
   int clase; // -1 no asigando
   int minutos; // numero de minutos asignados
@@ -12,7 +12,7 @@ class Cuadro {
   String subtitulo;
   String pie;
   int color;
-  Cuadro(this.nhuecos,
+  Actividad(this.nhuecos,
       [this.minutos = 0,
       this.clase = -1,
       this.titulo = '',
@@ -24,7 +24,7 @@ class Cuadro {
   String toString() =>
       '$nhuecos/$minutos/$clase/$titulo/$subtitulo/$pie/$color';
 
-  Cuadro.fromString(String s) {
+  Actividad.fromString(String s) {
     var member = s.split('/');
     this.nhuecos = int.parse(member[0]);
     this.minutos = int.parse(member[1]);
@@ -47,14 +47,14 @@ class HorarioData extends ChangeNotifier {
   // Tamaño de 'huecos' en minutos
   var huecos = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
 
-  // Almacena los cuadros asignados en el horario de Lunes a Viernes
-  var horario = List<List<Cuadro>>(5);
+  // Almacena los actividads asignados en el horario de Lunes a Viernes
+  var horario = List<List<Actividad>>(5);
 
   // Los patrones de ID TITULO/SUBTITULO/PIE/COLOR
   //var clase = Map<String, int>();
 
   // ===============  METODOS ================
-  /// Calcula los minutos de un cuadro
+  /// Calcula los minutos de un actividad
   /// desde el ihueco y de una longitud nhuecos
   int nMinutos(ihueco, nhuecos) {
     var minutos = 0;
@@ -62,48 +62,49 @@ class HorarioData extends ChangeNotifier {
     return minutos;
   }
 
-  // Pongo en un día tantos cuadros como huecos tenemos = Reset
+  // Pongo en un día tantos actividads como huecos tenemos = Reset
   void resetDia(dia) {
     horario[dia] = [];
-    huecos.forEach((minutos) => horario[dia].add(Cuadro(1, minutos, -1)));
+    huecos.forEach((minutos) => horario[dia].add(Actividad(1, minutos, -1)));
   }
 
-  // Me recalcula cuadros en minutos del día d
+  // Me recalcula actividads en minutos del día d
   void recalculaMinutosDia(var dia) {
     var iHueco = 0;
-    horario[dia].asMap().forEach((idx, cuadro) {
-      cuadro.minutos = nMinutos(iHueco, cuadro.nhuecos);
-      iHueco += cuadro.nhuecos;
+    horario[dia].asMap().forEach((idx, actividad) {
+      actividad.minutos = nMinutos(iHueco, actividad.nhuecos);
+      iHueco += actividad.nhuecos;
     });
   }
 
-  /// Reasignamos un Cuadro
-  /// El Cuadro debe estar vacio (nhuecos=1 y clase=-1)
-  void reasignaCuadro(int dia, int iCuadro, int nHuecos, [int clase = 0]) {
+  /// Reasignamos un Actividad
+  /// El Actividad debe estar vacio (nhuecos=1 y clase=-1)
+  void reasignaActividad(int dia, int iActividad, int nHuecos,
+      [int clase = 0]) {
     // print(
-    //    '$dia;$iCuadro;$nHuecos - ${horario[dia][iCuadro].nhuecos};${horario[dia][iCuadro].clase}');
-    //assert(horario[dia][iCuadro].nhuecos == 1);
-    //assert(horario[dia][iCuadro].clase == -1);
-    // la longitud asignado <= total cuadros del día
-    assert((iCuadro + nHuecos) <= horario[dia].length);
+    //    '$dia;$iActividad;$nHuecos - ${horario[dia][iActividad].nhuecos};${horario[dia][iActividad].clase}');
+    //assert(horario[dia][iActividad].nhuecos == 1);
+    //assert(horario[dia][iActividad].clase == -1);
+    // la longitud asignado <= total actividads del día
+    assert((iActividad + nHuecos) <= horario[dia].length);
 
-    var list = <Cuadro>[];
+    var list = <Actividad>[];
     var nuevonhuecos = 0;
     var nuevominutos = 0;
-    for (var i = iCuadro; i < iCuadro + nHuecos; i++) {
+    for (var i = iActividad; i < iActividad + nHuecos; i++) {
       nuevonhuecos += horario[dia][i].nhuecos;
       nuevominutos += horario[dia][i].minutos;
     }
     for (var i = 0; i < horario[dia].length; i++) {
-      var cuadro;
+      var actividad;
 
-      if (i == iCuadro) {
-        cuadro = Cuadro(nuevonhuecos, nuevominutos, clase); //, -1, 0);
-        i += nHuecos - 1; //salta los cuadros que este agrupa
+      if (i == iActividad) {
+        actividad = Actividad(nuevonhuecos, nuevominutos, clase); //, -1, 0);
+        i += nHuecos - 1; //salta los actividads que este agrupa
       } else
-        cuadro = horario[dia][i];
+        actividad = horario[dia][i];
 
-      list.add(cuadro);
+      list.add(actividad);
     }
     horario[dia] = list;
 
@@ -111,17 +112,17 @@ class HorarioData extends ChangeNotifier {
     //storage.escribirHorario(horario);
   }
 
-  /// Eliminamos un Cuadro de un día
+  /// Eliminamos un Actividad de un día
   /// El Bloque no está vacio (type<>-1)
   /// Se restauran tantos nuevos bloques vacíos como su size
-  void quitarCuadro(int dia, int iCuadro) {
-    var nuevaLista = <Cuadro>[];
+  void quitarActividad(int dia, int iActividad) {
+    var nuevaLista = <Actividad>[];
     var iHueco = 0;
 
     for (var i = 0; i < horario[dia].length; i++) {
-      if (i == iCuadro) {
+      if (i == iActividad) {
         for (var k = 0; k < horario[dia][i].nhuecos; k++) {
-          nuevaLista.add(Cuadro(1, nMinutos(iHueco, 1)));
+          nuevaLista.add(Actividad(1, nMinutos(iHueco, 1)));
           iHueco += 1;
         }
       } else {
@@ -143,22 +144,22 @@ class HorarioData extends ChangeNotifier {
     var n = 2;
     var l = 3;
     //print("=-------- asignar $d:$n/$l ---------");
-    reasignaCuadro(d, n, 3);
+    reasignaActividad(d, n, 3);
     //print(horario[d]);
     n = 3;
     l = 2;
     //print("=-------- asignar$d:$n/$l ---------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
     n = 0;
     //print("=-------- asignar $d:$n/$l ---------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
 
     n = 1;
     l = 2;
     //print("=-------- asignar $d:$n/$l ---------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
 
     d = 1;
@@ -169,46 +170,46 @@ class HorarioData extends ChangeNotifier {
     n = 4;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
 
     //print('--------- quitar $d:$n ----------');
-    quitarCuadro(d, n);
+    quitarActividad(d, n);
     //print(horario[d]);
 
     n = 3;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
 
     n = 0;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaCuadro(d, n, l);
+    reasignaActividad(d, n, l);
     //print(horario[d]);
 
     n = 1;
     //print('--------- quitar $d:$n ----------');
-    quitarCuadro(d, n);
+    quitarActividad(d, n);
     //print(horario[d]);
     n = 0;
     //print('--------- quitar $d:$n ----------');
-    quitarCuadro(d, n);
+    quitarActividad(d, n);
     //print(horario[d]);
 
     n = 3;
     l = 3;
     //print("=-------- asignar $d:$n/$l --------");
-    reasignaCuadro(d, n, l, 2);
+    reasignaActividad(d, n, l, 2);
     //print(horario[d]);
 
     n = 6;
     //print('--------- quitar $d:$n ----------');
-    quitarCuadro(d, n);
+    quitarActividad(d, n);
     //print(horario[d]);
 
-    reasignaCuadro(d, 6, 3, 1);
+    reasignaActividad(d, 6, 3, 1);
   }
 
   // ===================   CONSTRUCTOR =======================
@@ -249,9 +250,9 @@ class HorarioStorage {
   //   return File('$path/Clase.json');
   // }
 
-  Future<List<List<Cuadro>>> leerHorario() async {
+  Future<List<List<Actividad>>> leerHorario() async {
     try {
-      var h = List<List<Cuadro>>(5);
+      var h = List<List<Actividad>>(5);
       var d = -1;
       final file = await _localHorarioFile;
       //  String contents = await file.readAsString();
@@ -263,7 +264,7 @@ class HorarioStorage {
         h[++d] = [];
         for (var c in line.split(',')) {
           //print('$c');
-          h[d].add(Cuadro.fromString(c));
+          h[d].add(Actividad.fromString(c));
         }
       });
       return h;
@@ -274,14 +275,14 @@ class HorarioStorage {
     }
   }
 
-  // Future<File> escribirHorario(List<List<Cuadro>> l) async {
+  // Future<File> escribirHorario(List<List<Actividad>> l) async {
   //   final file = await _localFile;
 
   //   // Write the file
   //   return file.writeAsString(l.toString());
   // }
 
-  Future<File> escribirHorario(List<List<Cuadro>> l) async {
+  Future<File> escribirHorario(List<List<Actividad>> l) async {
     final file = await _localHorarioFile;
     var sb = StringBuffer();
 

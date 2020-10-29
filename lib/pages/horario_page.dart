@@ -1,4 +1,4 @@
-import 'package:calendar21/pages/cuadro_widget.dart';
+import 'package:calendar21/pages/actividad_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +104,7 @@ class _HorarioPageState extends State<HorarioPage> {
                   ],
                 ),
                 for (var i = 0; i < 5; i++) ...[
-                  ColumnaDiaria(dia: data.horario[i]),
+                  ColumnaDiaria(iDia: i, dia: data.horario[i]),
                   SizedBox(width: 2)
                 ],
               ],
@@ -124,10 +124,12 @@ class _HorarioPageState extends State<HorarioPage> {
 class ColumnaDiaria extends StatelessWidget {
   const ColumnaDiaria({
     Key key,
+    @required this.iDia,
     @required this.dia,
   }) : super(key: key);
 
-  final List<Cuadro> dia;
+  final List<Actividad> dia;
+  final int iDia;
 
   @override
   Widget build(BuildContext context) {
@@ -136,10 +138,35 @@ class ColumnaDiaria extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 10), //Gap para ajustar la hora
-          for (var cuadro in dia) ...[
+          //for (var actividad in dia) ...[
+          for (var iAct = 0; iAct < dia.length; iAct++) ...[
             Expanded(
-              flex: cuadro.minutos,
-              child: CuadroWidget(cuadro: cuadro),
+              flex: dia[iAct].minutos,
+              // Recubro de un detector de Gestos
+              // al Widget de Actividad
+              child: GestureDetector(
+                onTap: () async {
+                  // Página de detalle
+// vemos donde estamos
+                  print('dia: $iDia');
+                  print('act: $iAct');
+
+                  var detalle = Detalle(
+                    data: context.read<HorarioData>(),
+                    iDia: iDia,
+                    iActividad: iAct,
+                  );
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (_) => DetallePage(detalle: detalle)))
+                      .then(
+                    (response) {
+                      print(response?.titulo);
+                    },
+                  );
+                },
+                child: ActividadWidget(actividad: dia[iAct]),
+              ),
             ),
             //Divider(height: 2)
           ],

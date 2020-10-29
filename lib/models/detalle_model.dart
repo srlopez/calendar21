@@ -1,15 +1,15 @@
+import 'package:calendar21/providers/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class Detalle {
-  String titulo;
-  String subtitulo;
-  String pie;
-  Color color;
+  HorarioData data;
+  int iDia;
+  int iActividad;
 
-  Detalle(
-      {this.titulo = 'TITULO',
-      this.subtitulo = 'Sutitulo',
-      this.pie = 'Final',
-      this.color = Colors.amber});
+  Detalle({
+    @required this.data,
+    @required this.iDia,
+    @required this.iActividad,
+  });
 }

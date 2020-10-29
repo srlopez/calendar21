@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../providers/data.dart';
 import '../models/detalle_model.dart';
 
 class DetallePage extends StatefulWidget {
@@ -15,7 +15,7 @@ class _DetallePageState extends State<DetallePage> {
 
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.detalle.titulo);
+    _controller = TextEditingController(text: 'sdfs');
   }
 
   void dispose() {
@@ -24,6 +24,7 @@ class _DetallePageState extends State<DetallePage> {
   }
 
   Widget build(BuildContext context) {
+    var data = widget.detalle.data;
     return Scaffold(
       appBar: AppBar(
         title: Text('prueba'),
@@ -31,13 +32,16 @@ class _DetallePageState extends State<DetallePage> {
       body: Center(
         child: Column(
           children: [
+            Text('${widget.detalle.iDia}'),
+            Text('${widget.detalle.iActividad}'),
             TextField(
               controller: _controller,
             ),
             RaisedButton(
               child: Text('dale'),
               onPressed: () {
-                var detalle = Detalle(titulo: _controller.text);
+                var detalle = "sdfvsd";
+                //Detalle(titulo: _controller.text);
                 Navigator.of(context).pop<Detalle>(detalle);
               },
             )
