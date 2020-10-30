@@ -21,6 +21,7 @@ class _HorarioPageState extends State<HorarioPage> {
   Widget build(BuildContext context) {
     var data = context.watch<HorarioData>();
     final barraHeight = 40.0;
+
     format(Duration d) {
       var h = d.toString().split(':');
       return '${h[0]}:${h[1]}';
@@ -72,7 +73,7 @@ class _HorarioPageState extends State<HorarioPage> {
                                     child: Text(format(t))) //Text(format(t)),
                                 ),
                           ],
-                          Text(format(data.h0)),
+                          Text(format(data.hFinal())),
                           SizedBox(height: 30)
                         ],
                       ),

@@ -19,6 +19,13 @@ class HorarioData extends ChangeNotifier {
   var horario = List<List<Actividad>>(5);
 
   // ===============  METODOS ================
+
+  Duration hFinal() {
+    Duration h = h0;
+    for (var i = 0; i < huecos.length; i++) h += Duration(minutes: huecos[i]);
+    return h;
+  }
+
   /// Calcula los minutos de un actividad
   /// desde el ihueco y de una longitud nhuecos
   int nMinutos(ihueco, nhuecos) {
@@ -219,11 +226,11 @@ class HorarioData extends ChangeNotifier {
     print('Constructor async');
     storage = HorarioStorage();
 
-    // for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
-    // test();
-    //print(horario);
+    //  for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
+    //  test();
+    //  print(horario);
 
-    //await storage.escribirHorario(horario);
+    //  await storage.escribirHorario(horario);
     horario = await storage.leerHorario();
 
     //print('======CONSTRUCTOR =====');

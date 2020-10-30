@@ -53,71 +53,69 @@ class _DetallePageState extends State<DetallePage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                  ' Dia:${widget.detalle.iDia} Actividad: ${widget.detalle.iActividad}'),
-              Slider(
-                  value: _value.toDouble(),
-                  min: 1.0,
-                  max: 10.0,
-                  divisions: 10,
-                  activeColor: Colors.red,
-                  inactiveColor: Colors.black,
-                  label: 'Set a value',
-                  onChanged: (double newValue) {
-                    setState(() {
-                      _value = newValue;
-                    });
-                  },
-                  semanticFormatterCallback: (double newValue) {
-                    return '${newValue.round()} dollars';
-                  }),
-              TextFormField(controller: _nHuecosCtrl),
-              TextFormField(controller: _tituloCtrl),
-              TextFormField(controller: _subtituloCtrl),
-              TextFormField(controller: _pieCtrl),
-              TextFormField(controller: _colorCtrl),
-              //TextField(controller: _controller),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  RaisedButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      act.asignada = true;
-                      act.nhuecos = int.parse(_nHuecosCtrl.text);
-                      act.titulo = _tituloCtrl.text;
-                      act.subtitulo = _subtituloCtrl.text;
-                      act.pie = _pieCtrl.text;
-                      act.color = int.parse(_colorCtrl.text);
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                    ' Dia:${widget.detalle.iDia} Actividad: ${widget.detalle.iActividad}'),
+                Slider(
+                    value: _value.toDouble(),
+                    min: 1.0,
+                    max: 10.0,
+                    divisions: 10,
+                    activeColor: Colors.red,
+                    inactiveColor: Colors.black,
+                    label: 'Set a value',
+                    onChanged: (double newValue) {
+                      setState(() {
+                        _value = newValue;
+                      });
+                    },
+                    semanticFormatterCallback: (double newValue) {
+                      return '${newValue.round()} dollars';
+                    }),
+                TextFormField(controller: _nHuecosCtrl),
+                TextFormField(controller: _tituloCtrl),
+                TextFormField(controller: _subtituloCtrl),
+                TextFormField(controller: _pieCtrl),
+                TextFormField(controller: _colorCtrl),
+                //TextField(controller: _controller),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    RaisedButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        act.asignada = true;
+                        act.nhuecos = int.parse(_nHuecosCtrl.text);
+                        act.titulo = _tituloCtrl.text;
+                        act.subtitulo = _subtituloCtrl.text;
+                        act.pie = _pieCtrl.text;
+                        act.color = int.parse(_colorCtrl.text);
 
-                      Navigator.of(context).pop<Actividad>(act);
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text('Quitar'),
-                    onPressed: () {
-                      act.asignada = false;
-                      act.nhuecos = int.parse(_nHuecosCtrl.text);
-                      act.titulo = _tituloCtrl.text;
-                      act.subtitulo = _subtituloCtrl.text;
-                      act.pie = _pieCtrl.text;
-                      act.color = int.parse(_colorCtrl.text);
+                        Navigator.of(context).pop<Actividad>(act);
+                      },
+                    ),
+                    RaisedButton(
+                      child: Text('Quitar'),
+                      onPressed: () {
+                        act = Actividad.fromString(horario[d][a].toString());
+                        act.asignada = false;
 
-                      Navigator.of(context).pop<Actividad>(act);
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ),
-            ],
+                        Navigator.of(context).pop<Actividad>(act);
+                      },
+                    ),
+                    RaisedButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

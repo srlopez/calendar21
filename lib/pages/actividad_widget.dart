@@ -12,7 +12,7 @@ class ActividadWidget extends StatelessWidget {
       width: double.infinity,
       //height: 200,
       decoration: BoxDecoration(
-        color: actividad.asignada ? Colors.amber : Colors.cyan,
+        color: actividad.asignada ? Color(actividad.color) : Colors.cyan,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
