@@ -1,4 +1,6 @@
+import 'package:calendar21/widgets/color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/detalle_model.dart';
 import '../models/actividad_model.dart';
 
@@ -20,7 +22,6 @@ class _DetallePageState extends State<DetallePage> {
   TextEditingController _tituloCtrl;
   TextEditingController _subtituloCtrl;
   TextEditingController _pieCtrl;
-  TextEditingController _colorCtrl;
 
   void initState() {
     super.initState();
@@ -28,12 +29,12 @@ class _DetallePageState extends State<DetallePage> {
     d = widget.detalle.iDia;
     a = widget.detalle.iActividad;
     act = Actividad.fromString(horario[d][a].toString());
+    if (!act.asignada) act.color = subColorList[subColorList.length - 1].value;
 
     _nHuecosCtrl = TextEditingController(text: act.nhuecos.toString());
     _tituloCtrl = TextEditingController(text: act.titulo);
     _subtituloCtrl = TextEditingController(text: act.subtitulo);
     _pieCtrl = TextEditingController(text: act.pie);
-    _colorCtrl = TextEditingController(text: act.color.toString());
   }
 
   void dispose() {
@@ -45,10 +46,9 @@ class _DetallePageState extends State<DetallePage> {
   }
 
   Widget build(BuildContext context) {
-    var _value = 3.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('prueba'),
+        title: Text(act.asignada ? 'Modificar Actividad' : 'Indicar Actividad'),
       ),
       body: Center(
         child: Padding(
@@ -58,29 +58,99 @@ class _DetallePageState extends State<DetallePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                    ' Dia:${widget.detalle.iDia} Actividad: ${widget.detalle.iActividad}'),
-                Slider(
-                    value: _value.toDouble(),
-                    min: 1.0,
-                    max: 10.0,
-                    divisions: 10,
-                    activeColor: Colors.red,
-                    inactiveColor: Colors.black,
-                    label: 'Set a value',
-                    onChanged: (double newValue) {
-                      setState(() {
-                        _value = newValue;
-                      });
-                    },
-                    semanticFormatterCallback: (double newValue) {
-                      return '${newValue.round()} dollars';
-                    }),
-                TextFormField(controller: _nHuecosCtrl),
-                TextFormField(controller: _tituloCtrl),
-                TextFormField(controller: _subtituloCtrl),
-                TextFormField(controller: _pieCtrl),
-                TextFormField(controller: _colorCtrl),
-                //TextField(controller: _controller),
+                  ' ${[
+                    "Lunes",
+                    "Martes",
+                    "Miercoles",
+                    "Jueves",
+                    "Viernes"
+                  ][widget.detalle.iDia]}  ${widget.detalle.hora}',
+                  style: new TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.bold),
+                ),
+                // Slider(
+                //     value: _value.toDouble(),
+                //     min: 1.0,
+                //     max: 10.0,
+                //     divisions: 10,
+                //     activeColor: Colors.red,
+                //     inactiveColor: Colors.black,
+                //     label: 'Set a value',
+                //     onChanged: (double newValue) {
+                //       setState(() {
+                //         _value = newValue;
+                //       });
+                //     },
+                //     semanticFormatterCallback: (double newValue) {
+                //       return '${newValue.round()} dollars';
+                //     }),
+                TextFormField(
+                  controller: _nHuecosCtrl,
+                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    labelText: 'Número de huecos',
+                    icon: Icon(Icons.donut_large),
+                  ),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  onChanged: (value) {
+                    print('onChanged $value');
+                  },
+                  onSaved: (value) {
+                    print('onChanged $value');
+                  },
+                  validator: (value) {
+                    int val = int.parse('0' + value);
+                    //if (value.isEmpty) return 'Valor entre 1 y 2';
+                    if ((val < 1) | (val > 4)) return 'Valor entre 1 y 4';
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _tituloCtrl,
+                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    labelText: 'Módulo',
+                    icon: Icon(Icons.book),
+                  ),
+                ),
+                TextFormField(
+                  controller: _subtituloCtrl,
+                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    labelText: 'Grupo',
+                    icon: Icon(Icons.group),
+                  ),
+                ),
+                TextFormField(
+                  controller: _pieCtrl,
+                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: InputDecoration(
+                    labelText: 'Ubcación',
+                    icon: Icon(Icons.room),
+                  ),
+                ),
+                Text(''),
+                Text('Selector de Color'),
+                ColorPicker(
+                  currentColor: Color(act.color),
+                  onSelected: (color) {
+                    print('onSelect: $color');
+                    act.color = color.value;
+                  },
+                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -92,7 +162,6 @@ class _DetallePageState extends State<DetallePage> {
                         act.titulo = _tituloCtrl.text;
                         act.subtitulo = _subtituloCtrl.text;
                         act.pie = _pieCtrl.text;
-                        act.color = int.parse(_colorCtrl.text);
 
                         Navigator.of(context).pop<Actividad>(act);
                       },

@@ -13,7 +13,7 @@ class HorarioData extends ChangeNotifier {
   final h0 = Duration(hours: 8, minutes: 0);
 
   // Tamaño de 'huecos' en minutos
-  var huecos = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55, 35]; //11
+  var huecos = [15, 40, 55, 25, 30, 55, 25, 55, 55, 55]; //10
 
   // Almacena los actividades asignados en el horario de Lunes a Viernes
   var horario = List<List<Actividad>>(5);
@@ -24,6 +24,18 @@ class HorarioData extends ChangeNotifier {
     Duration h = h0;
     for (var i = 0; i < huecos.length; i++) h += Duration(minutes: huecos[i]);
     return h;
+  }
+
+  Duration hActividad(int iDia, int iAct) {
+    Duration h = h0;
+    for (var i = 0; i <= iAct; i++)
+      h += Duration(minutes: horario[iDia][i].minutos);
+    return h;
+  }
+
+  formatDuration(Duration d) {
+    var h = d.toString().split(':');
+    return '${h[0]}:${h[1]}';
   }
 
   /// Calcula los minutos de un actividad
@@ -54,8 +66,8 @@ class HorarioData extends ChangeNotifier {
   void nuevaActividad(int dia, int iActividad, Actividad act) {
     // print(
     //    '$dia;$iActividad;$nHuecos - ${horario[dia][iActividad].nhuecos};${horario[dia][iActividad].clase}');
-    //assert(horario[dia][iActividad].nhuecos == 1);
-    //assert(horario[dia][iActividad].clase == -1);
+    assert(horario[dia][iActividad].nhuecos == 1);
+    assert(horario[dia][iActividad].asignada == false);
     // la longitud asignado <= total actividads del día
     assert((iActividad + act.nhuecos) <= horario[dia].length);
 
@@ -93,6 +105,10 @@ class HorarioData extends ChangeNotifier {
     //assert(horario[dia][iActividad].nhuecos == 1);
     //assert(horario[dia][iActividad].clase == -1);
     // la longitud asignado <= total actividads del día
+    nHuecos = (iActividad + nHuecos) <= horario[dia].length
+        ? nHuecos
+        : horario[dia].length - iActividad;
+
     assert((iActividad + nHuecos) <= horario[dia].length);
 
     var list = <Actividad>[];
@@ -122,7 +138,7 @@ class HorarioData extends ChangeNotifier {
   /// Eliminamos un Actividad de un día
   /// El Bloque no está vacio (type<>-1)
   /// Se restauran tantos nuevos bloques vacíos como su size
-  void quitarActividad(int dia, int iActividad) {
+  void quitarActividad(int dia, int iActividad, [bool save = false]) {
     var nuevaLista = <Actividad>[];
     var iHueco = 0;
 
@@ -139,8 +155,11 @@ class HorarioData extends ChangeNotifier {
     }
     horario[dia] = nuevaLista;
 
-    notifyListeners();
-    storage.escribirHorario(horario);
+    // Si despues de 'quitar' hemops de 'guardar' evitamos save y notify
+    if (save) {
+      notifyListeners();
+      storage.escribirHorario(horario);
+    }
   }
 
   void test() {
@@ -226,11 +245,11 @@ class HorarioData extends ChangeNotifier {
     print('Constructor async');
     storage = HorarioStorage();
 
-    //  for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
-    //  test();
+    //for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
+    //test();
     //  print(horario);
 
-    //  await storage.escribirHorario(horario);
+    //await storage.escribirHorario(horario);
     horario = await storage.leerHorario();
 
     //print('======CONSTRUCTOR =====');

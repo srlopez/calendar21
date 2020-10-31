@@ -22,11 +22,6 @@ class _HorarioPageState extends State<HorarioPage> {
     var data = context.watch<HorarioData>();
     final barraHeight = 40.0;
 
-    format(Duration d) {
-      var h = d.toString().split(':');
-      return '${h[0]}:${h[1]}';
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -55,7 +50,7 @@ class _HorarioPageState extends State<HorarioPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(format(data.h0)),
+                          Text(data.formatDuration(data.h0)),
                           SizedBox(height: 5),
                           for (var i = 1,
                                   t = data.h0 +
@@ -70,10 +65,11 @@ class _HorarioPageState extends State<HorarioPage> {
                                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     alignment: Alignment.topRight,
                                     //color: Colors.indigoAccent,
-                                    child: Text(format(t))) //Text(format(t)),
+                                    child: Text(data
+                                        .formatDuration(t))) //Text(format(t)),
                                 ),
                           ],
-                          Text(format(data.hFinal())),
+                          Text(data.formatDuration(data.hFinal())),
                           SizedBox(height: 30)
                         ],
                       ),
@@ -128,10 +124,12 @@ class ColumnaDiaria extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   // Página de detalle
+                  var data = context.read<HorarioData>();
                   var detalle = Detalle(
-                      data: context.read<HorarioData>(),
+                      data: data,
                       iDia: iDia,
-                      iActividad: iAct);
+                      iActividad: iAct,
+                      hora: data.formatDuration(data.hActividad(iDia, iAct)));
                   Actividad response = await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -141,8 +139,7 @@ class ColumnaDiaria extends StatelessWidget {
                   if (response != null) {
                     //Actuamos
                     var data = context.read<HorarioData>();
-                    data.quitarActividad(iDia, iAct);
-                    //data.reasignaActividad(iDia, iAct, response.nhuecos);
+                    data.quitarActividad(iDia, iAct, !response.asignada);
                     if (response.asignada)
                       data.nuevaActividad(iDia, iAct, response);
                   }

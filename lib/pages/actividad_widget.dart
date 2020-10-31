@@ -1,3 +1,5 @@
+import 'package:calendar21/widgets/color_picker.dart';
+
 import '../models/actividad_model.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,7 @@ class ActividadWidget extends StatelessWidget {
       width: double.infinity,
       //height: 200,
       decoration: BoxDecoration(
-        color: actividad.asignada ? Color(actividad.color) : Colors.cyan,
+        color: actividad.asignada ? Color(actividad.color) : Colors.grey[200],
         borderRadius: BorderRadius.circular(5),
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
@@ -26,10 +28,28 @@ class ActividadWidget extends StatelessWidget {
               //crossAxisAlignment: CrossAxisAlignment.stretch,
               //mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('${actividad.titulo}', overflow: TextOverflow.clip),
-                Text('${actividad.subtitulo}', overflow: TextOverflow.clip),
+                Text(
+                  '${actividad.titulo}',
+                  overflow: TextOverflow.clip,
+                  style: new TextStyle(
+                      fontSize: 13.0,
+                      //fontFamily: 'Roboto',
+                      color: highlightColor(Color(actividad.color)),
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${actividad.subtitulo}',
+                  overflow: TextOverflow.clip,
+                  style: new TextStyle(
+                      color: highlightColor(Color(actividad.color))),
+                ),
                 Expanded(child: Container(width: 0, height: 0)),
-                Text('${actividad.pie}', overflow: TextOverflow.clip),
+                Text(
+                  '${actividad.pie}',
+                  overflow: TextOverflow.clip,
+                  style: new TextStyle(
+                      color: highlightColor(Color(actividad.color))),
+                ),
               ],
             )
           : Container(
