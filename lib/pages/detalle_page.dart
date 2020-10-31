@@ -93,7 +93,7 @@ class _DetallePageState extends State<DetallePage> {
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     labelText: 'Número de huecos',
-                    icon: Icon(Icons.donut_large),
+                    icon: Icon(Icons.donut_small_rounded), //donut_large),
                   ),
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -118,7 +118,7 @@ class _DetallePageState extends State<DetallePage> {
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     labelText: 'Módulo',
-                    icon: Icon(Icons.book),
+                    icon: Icon(Icons.edit), //book),
                   ),
                 ),
                 TextFormField(

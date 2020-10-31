@@ -20,7 +20,7 @@ class ColorPicker extends StatefulWidget {
   final Color currentColor;
 
   @override
-  ColorPickerState createState() => new ColorPickerState();
+  ColorPickerState createState() => ColorPickerState();
 }
 
 class ColorPickerState extends State<ColorPicker> {
@@ -63,29 +63,37 @@ class ColorPickerState extends State<ColorPicker> {
   Widget build(BuildContext context) {
     var column =
         // main colors
-        new Column(children: <Widget>[
-      new SizedBox(
+        Column(children: <Widget>[
+      for (var line = 1; line <= 2; line++)
+        SizedBox(
+          height: widget.boxesHeight ?? baseHeight * 2,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: _subColors(context, line),
+          ),
+        ),
+      SizedBox(height: widget.spacing ?? baseSpacing),
+      SizedBox(
         height: widget.boxesHeight ?? baseHeight,
-        child: new Row(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: _mainColors(context),
         ),
       ),
-      new SizedBox(height: widget.spacing ?? baseSpacing),
     ]);
 
     // two subcolors lines
-    [1, 2].forEach((line) {
-      column.children.add(new SizedBox(
-        height: widget.boxesHeight ?? baseHeight,
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _subColors(context, line),
-        ),
-      ));
-    });
+    // [1, 2].forEach((line) {
+    //   column.children.add(SizedBox(
+    //     height: widget.boxesHeight ?? baseHeight * 2,
+    //     child: Row(
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       children: _subColors(context, line),
+    //     ),
+    //   ));
+    // });
 
-    return new Container(
+    return Container(
       padding: EdgeInsets.all(widget.margin ?? baseMargin),
       child: column,
     );
@@ -95,35 +103,33 @@ class ColorPickerState extends State<ColorPicker> {
     var children = <Widget>[];
 
     for (Color color in mainColors) {
-      children.add(new Expanded(
-          child:
-              new Stack(children: _mainColorsStackChildren(context, color))));
+      children.add(Expanded(
+          child: Stack(children: _mainColorsStackChildren(context, color))));
     }
     return children;
   }
 
   List<Widget> _mainColorsStackChildren(BuildContext context, Color color) {
     var children = <Widget>[];
-    print('*main: $_mainColorSelected sub: $color');
+    //print('*main: $_mainColorSelected sub: $color');
 
     if (_mainColorSelected == color) {
-      children.add(new Container(
-          decoration: BoxDecoration(boxShadow: [
-        new BoxShadow(color: Colors.grey, blurRadius: 2.0)
-      ])));
+      children.add(Container(
+          decoration: BoxDecoration(
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 2.0)])));
     }
 
-    children.add(new GestureDetector(
-      child: new Container(color: color),
+    children.add(GestureDetector(
+      child: Container(color: color),
       onTapDown: (d) {
         _selectColor(context, color, false);
       },
     ));
 
     if (_mainColorSelected == color) {
-      children.add(new Container(
+      children.add(Container(
           decoration: BoxDecoration(
-        border: new Border.all(color: Colors.grey[200], width: 3.0),
+        border: Border.all(color: Colors.grey[200], width: 3.0),
       )));
     }
 
@@ -134,8 +140,8 @@ class ColorPickerState extends State<ColorPicker> {
     var children = <Widget>[];
     int offset = ((line - 1) * 4);
     for (int i = 0; i <= 3; i++) {
-      children.add(new Expanded(
-          child: new Stack(
+      children.add(Expanded(
+          child: Stack(
               children: _subColorsStackChildren(
                   context, iMainColor * 8 + offset + i))));
     }
@@ -147,8 +153,13 @@ class ColorPickerState extends State<ColorPicker> {
     //Color color = subColorList[_mainColorSelected][i];
     Color color = subColorList[i];
 
-    children.add(new GestureDetector(
-      child: new Container(color: color),
+    children.add(GestureDetector(
+      child: Container(
+          //color: color,
+          decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      )),
       onTapDown: (d) {
         _selectColor(context, color, true);
       },
@@ -156,14 +167,16 @@ class ColorPickerState extends State<ColorPicker> {
 
     if (_subColorSelected == color) {
       Color highlightedColor = highlightColor(color);
-      children.add(new GestureDetector(
-          child: new Container(
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: new Border.all(color: highlightedColor, width: 1.5)),
-            child: new Center(
-                child: new Icon(Icons.check,
-                    size: (baseHeight / 2.0), color: highlightedColor)),
+      children.add(GestureDetector(
+          child: Container(
+            //height: widget.boxesHeight ?? baseHeight,
+            // decoration: BoxDecoration(
+            //     shape: BoxShape.circle,
+            //     border: Border.all(color: highlightedColor, width: 1.5)),
+            child: Center(
+                child: Icon(Icons.gamepad, //Icons.check,
+                    //size: (baseHeight / 2.0),
+                    color: highlightedColor)),
             margin: EdgeInsets.all(2.0),
           ),
           onTapDown: (d) {
@@ -176,7 +189,7 @@ class ColorPickerState extends State<ColorPicker> {
 }
 
 Color highlightColor(Color c) {
-  if (c.computeLuminance() < 0.3) return Colors.white;
+  if (c.computeLuminance() < 0.5) return Colors.white;
   return Colors.black;
 }
 
