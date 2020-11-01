@@ -251,13 +251,12 @@ class HorarioData extends ChangeNotifier {
 
     //await storage.escribirHorario(horario);
     horario = await storage.leerHorario();
-
+    if (horario[0] == null)
+      for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
     //print('======CONSTRUCTOR =====');
     //print(horario);
   }
 }
-
-// ========================================
 
 // ========================================
 class HorarioStorage {
@@ -269,7 +268,7 @@ class HorarioStorage {
 
   Future<File> get _localHorarioFile async {
     final path = await _localPath;
-    return File('$path/Horario.txt');
+    return File('$path/Horario.txt').create(recursive: true);
   }
 
   // Future<File> get _localClaseFile async {
@@ -286,19 +285,15 @@ class HorarioStorage {
       //  print(contents);
       List<String> lines = file.readAsLinesSync();
       lines.forEach((line) {
-        //print('line: $l');
-
         h[++d] = [];
         for (var c in line.split(',')) {
-          //print('$c');
           h[d].add(Actividad.fromString(c));
         }
       });
       return h;
-      //l.map((i) => int.parse(i)).toList();
     } catch (e) {
       print(e.toString());
-      return [[], [], [], [], []];
+      return null;
     }
   }
 
