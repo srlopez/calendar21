@@ -14,8 +14,21 @@ class ActividadWidget extends StatelessWidget {
       width: double.infinity,
       //height: 200,
       decoration: BoxDecoration(
-        color: actividad.asignada ? Color(actividad.color) : Colors.grey[200],
+        color:
+            actividad.asignada ? Color(actividad.color) : Colors.blueGrey[50],
         borderRadius: BorderRadius.circular(5),
+        // border: Border.all(
+        //   color: Colors.grey[300],
+        //   width: 1,
+        // ),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.grey[300].withOpacity(0.4),
+        //     spreadRadius: 1,
+        //     blurRadius: 1,
+        //     offset: Offset(2, 2), // changes position of shadow
+        //   ),
+        // ],
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
       margin: EdgeInsets.only(bottom: 2),

@@ -1,8 +1,8 @@
-import '../models/actividad_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 // import 'dart:convert';
+import '../models/actividad_model.dart';
 
 class HorarioData extends ChangeNotifier {
   // ===============  MIEMBROS ==============
@@ -28,12 +28,12 @@ class HorarioData extends ChangeNotifier {
 
   Duration hActividad(int iDia, int iAct) {
     Duration h = h0;
-    for (var i = 0; i <= iAct; i++)
+    for (var i = 0; i < iAct; i++)
       h += Duration(minutes: horario[iDia][i].minutos);
     return h;
   }
 
-  formatDuration(Duration d) {
+  String formatDuration(Duration d) {
     var h = d.toString().split(':');
     return '${h[0]}:${h[1]}';
   }

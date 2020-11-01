@@ -39,6 +39,7 @@ class _HorarioPageState extends State<HorarioPage> {
                 MediaQuery.of(context).padding.top -
                 kToolbarHeight -
                 barraHeight,
+            color: Colors.grey[100],
             child: Row(
               children: [
                 Row(
