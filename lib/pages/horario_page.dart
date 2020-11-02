@@ -29,9 +29,9 @@ class _HorarioPageState extends State<HorarioPage> {
       body: Column(
         children: [
           SizedBox(
-            //hueco ar dias
+            //espacio para dias
             height: barraHeight,
-            child: Placeholder(),
+            child: Container(), //Placeholder(),
           ),
           // ),//Gesture
           Container(
@@ -51,26 +51,26 @@ class _HorarioPageState extends State<HorarioPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(data.formatDuration(data.h0)),
+                          Text(data.horaFormat(data.h0)),
                           SizedBox(height: 5),
                           for (var i = 1,
                                   t = data.h0 +
-                                      Duration(minutes: data.huecos[0]);
-                              i < data.huecos.length;
-                              t += Duration(minutes: data.huecos[i++]),) ...[
+                                      Duration(minutes: data.segmentos[0]);
+                              i < data.segmentos.length;
+                              t += Duration(minutes: data.segmentos[i++]),) ...[
                             Expanded(
-                                flex: data.huecos[i],
+                                flex: data.segmentos[i],
                                 child: Container(
                                     margin: EdgeInsets.fromLTRB(0, 0, 0, 4),
                                     clipBehavior: Clip.none,
                                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     alignment: Alignment.topRight,
                                     //color: Colors.indigoAccent,
-                                    child: Text(data
-                                        .formatDuration(t))) //Text(format(t)),
+                                    child: Text(
+                                        data.horaFormat(t))) //Text(format(t)),
                                 ),
                           ],
-                          Text(data.formatDuration(data.hFinal())),
+                          Text(data.horaFormat(data.horaFinal())),
                           SizedBox(height: 30)
                         ],
                       ),
@@ -130,7 +130,7 @@ class ColumnaDiaria extends StatelessWidget {
                       data: data,
                       iDia: iDia,
                       iActividad: iAct,
-                      hora: data.formatDuration(data.hActividad(iDia, iAct)));
+                      hora: data.horaFormat(data.horaActividad(iDia, iAct)));
                   Actividad response = await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -150,7 +150,7 @@ class ColumnaDiaria extends StatelessWidget {
             ),
             //Divider(height: 2)
           ],
-          SizedBox(height: 40, child: Placeholder()),
+          SizedBox(height: 40, child: Container()), //Placeholder()),
         ],
       ),
     );

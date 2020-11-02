@@ -29,9 +29,10 @@ class _DetallePageState extends State<DetallePage> {
     d = widget.detalle.iDia;
     a = widget.detalle.iActividad;
     act = Actividad.fromString(horario[d][a].toString());
+    // Asignamos un color inicial si es nueva
     if (!act.asignada) act.color = subColorList[subColorList.length - 1].value;
 
-    _nHuecosCtrl = TextEditingController(text: act.nhuecos.toString());
+    _nHuecosCtrl = TextEditingController(text: act.nsegmentos.toString());
     _tituloCtrl = TextEditingController(text: act.titulo);
     _subtituloCtrl = TextEditingController(text: act.subtitulo);
     _pieCtrl = TextEditingController(text: act.pie);
@@ -158,7 +159,7 @@ class _DetallePageState extends State<DetallePage> {
                       child: Text('OK'),
                       onPressed: () {
                         act.asignada = true;
-                        act.nhuecos = int.parse(_nHuecosCtrl.text);
+                        act.nsegmentos = int.parse(_nHuecosCtrl.text);
                         act.titulo = _tituloCtrl.text;
                         act.subtitulo = _subtituloCtrl.text;
                         act.pie = _pieCtrl.text;
@@ -166,15 +167,18 @@ class _DetallePageState extends State<DetallePage> {
                         Navigator.of(context).pop<Actividad>(act);
                       },
                     ),
-                    RaisedButton(
-                      child: Text('Quitar'),
-                      onPressed: () {
-                        act = Actividad.fromString(horario[d][a].toString());
-                        act.asignada = false;
+                    act.asignada //Si la actividad no existe no la quitamos
+                        ? RaisedButton(
+                            child: Text('Quitar'),
+                            onPressed: () {
+                              act = Actividad.fromString(
+                                  horario[d][a].toString());
+                              act.asignada = false;
 
-                        Navigator.of(context).pop<Actividad>(act);
-                      },
-                    ),
+                              Navigator.of(context).pop<Actividad>(act);
+                            },
+                          )
+                        : Container(),
                     RaisedButton(
                       child: Text('Cancel'),
                       onPressed: () {
