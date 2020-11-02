@@ -1,34 +1,136 @@
 import 'package:flutter/material.dart';
 
 class SemanarioWidget extends StatelessWidget {
+  SemanarioWidget({@required this.margin});
+  final double margin;
+
   final semanasLimite = 54;
   final PageController pageController = PageController(initialPage: 54);
+  final colorDia = Colors.grey[300];
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: PageView.builder(
+    return PageView.builder(
       controller: pageController,
       itemBuilder: (context, _index) {
         final semana = _index - semanasLimite;
         var lunes = lunesDeLaSemana(semana);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('#${semanaAnual(lunes)} ${lunes.toString().substring(5, 7)}'),
-            Row(children: [
-              for (var d = 0; d < 5; d++)
-                Column(children: [
+
+        return Container(
+          color: Theme.of(context).primaryColor,
+          child: Row(children: [
+            // Icono
+            SizedBox(
+              width: margin,
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipOval(
+                    child: Material(
+                      color: Theme.of(context).primaryColor,
+                      child: InkWell(
+                        splashColor: colorDia, // inkwell color
+                        child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: Icon(
+                              Icons.today_rounded,
+                              color: colorDia,
+                            )),
+                        onTap: () {
+                          // pageController
+                          //     .jumpToPage(semanasLimite);
+                          pageController.animateToPage(semanasLimite,
+                              curve: Curves.decelerate,
+                              duration: Duration(milliseconds: 300));
+                        },
+                      ),
+                    ),
+                  ),
+                  //SizedBox(height: 6),
+                  Text('#${semanaAnual(lunes)}',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: colorDia)),
+                ],
+              ),
+            ),
+
+            // La semana
+            Expanded(
+              flex: 1,
+              child: Column(
+                //crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                      lunes.add(Duration(days: d)).toString().substring(8, 11)),
-                  Text(["L", "M", "X", "J", "V"][d]),
-                  Text(esHoy(lunes.add(Duration(days: d))) ? 'Hoy' : ''),
-                ])
-            ]),
-          ],
+                      '${[
+                        "ENE",
+                        "FEB",
+                        "MAR",
+                        "ABR",
+                        "MAY",
+                        "JUN",
+                        "JUL",
+                        "AGO",
+                        "SEP",
+                        "OCT",
+                        "Nov",
+                        "DIC"
+                      ][lunes.month - 1]} ${lunes.year}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          //fontWeight: FontWeight.bold,
+                          color: colorDia)),
+                  SizedBox(height: 3),
+                  Row(children: [
+                    for (var d = 0, hoy = esHoy(lunes);
+                        d < 5;
+                        d++, hoy = esHoy(lunes.add(Duration(days: d))))
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      //fontWeight: FontWeight.bold,
+                                      color: colorDia)),
+                              Container(
+                                  width: 30.0,
+                                  height: 30.0,
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: hoy
+                                        ? colorDia
+                                        : Theme.of(context).primaryColor,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      lunes
+                                          .add(Duration(days: d))
+                                          .day
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: hoy
+                                            ? Theme.of(context).primaryColor
+                                            : colorDia,
+                                      ),
+                                    ),
+                                  )),
+                            ]),
+                      ),
+                  ])
+                ],
+              ),
+            ),
+          ]),
         );
       },
-    ));
+    );
   }
 }
 

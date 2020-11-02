@@ -1,6 +1,7 @@
-import '../widgets/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../widgets/color_picker.dart';
 import '../models/detalle_model.dart';
 import '../models/actividad_model.dart';
 

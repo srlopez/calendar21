@@ -21,7 +21,8 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     var data = context.watch<HorarioData>();
-    final barraHeight = 65.0;
+    final alturaSemanario = 80.0;
+    final anchoHoras = 60.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -29,25 +30,25 @@ class _HorarioPageState extends State<HorarioPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            //espacio para dias
-            height: barraHeight,
-            child: SemanarioWidget(),
+          // Semanario
+          Container(
+            height: alturaSemanario,
+            child: SemanarioWidget(margin: anchoHoras),
           ),
-          // ),//Gesture
+          // Parrilla Horaria Columnas verticales
           Container(
             height: MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.top -
                 kToolbarHeight -
-                barraHeight,
+                alturaSemanario,
             color: Colors.grey[100],
             child: Row(
               children: [
                 Row(
                   children: [
+                    //Columna de HORAS
                     Container(
-                      //Columna de HORAS
-                      width: 60,
+                      width: anchoHoras,
                       padding: EdgeInsets.only(right: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -72,12 +73,13 @@ class _HorarioPageState extends State<HorarioPage> {
                                 ),
                           ],
                           Text(data.horaFormat(data.horaFinal())),
-                          SizedBox(height: 30)
+                          //SizedBox(height: 30)
                         ],
                       ),
                     ),
                   ],
                 ),
+                // Columnas semanales
                 for (var i = 0; i < 5; i++) ...[
                   Consumer<HorarioData>(
                     builder: (context, data, child) {
@@ -89,7 +91,6 @@ class _HorarioPageState extends State<HorarioPage> {
               ],
             ),
           ),
-          //SizedBox(height: barraHeight, child: Center(child: Text('pie'))),
         ],
       ),
     );
@@ -151,7 +152,7 @@ class ColumnaDiaria extends StatelessWidget {
             ),
             //Divider(height: 2)
           ],
-          SizedBox(height: 40, child: Container()), //Placeholder()),
+          SizedBox(height: 10, child: Container()), //Placeholder()),
         ],
       ),
     );
