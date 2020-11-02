@@ -14,12 +14,8 @@ class SemanarioWidget extends StatelessWidget {
         var lunes = lunesDeLaSemana(semana);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
-          //margin: const EdgeInsets.all(9.0),
-          //color: Colors.red,
           children: [
-            Text(lunes.toString().substring(5, 7)),
-            Text(semanaAnual(lunes).toString()),
+            Text('#${semanaAnual(lunes)} ${lunes.toString().substring(5, 7)}'),
             Row(children: [
               for (var d = 0; d < 5; d++)
                 Column(children: [

@@ -21,7 +21,7 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     var data = context.watch<HorarioData>();
-    final barraHeight = 80.0;
+    final barraHeight = 65.0;
 
     return Scaffold(
       appBar: AppBar(
