@@ -1,5 +1,6 @@
 import 'package:calendar21/models/actividad_model.dart';
 import 'package:calendar21/pages/actividad_widget.dart';
+import 'package:calendar21/pages/semanario_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     var data = context.watch<HorarioData>();
-    final barraHeight = 40.0;
+    final barraHeight = 80.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +32,7 @@ class _HorarioPageState extends State<HorarioPage> {
           SizedBox(
             //espacio para dias
             height: barraHeight,
-            child: Container(), //Placeholder(),
+            child: SemanarioWidget(),
           ),
           // ),//Gesture
           Container(
