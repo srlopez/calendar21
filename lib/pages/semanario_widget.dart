@@ -23,7 +23,7 @@ class SemanarioWidget extends StatelessWidget {
             SizedBox(
               width: margin,
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipOval(
                     child: Material(
@@ -31,12 +31,12 @@ class SemanarioWidget extends StatelessWidget {
                       child: InkWell(
                         splashColor: colorDia, // inkwell color
                         child: SizedBox(
-                            width: 50,
-                            height: 50,
+                            //width: 50,
+                            //height: 50,
                             child: Icon(
-                              Icons.today_rounded,
-                              color: colorDia,
-                            )),
+                          Icons.today_rounded,
+                          color: colorDia,
+                        )),
                         onTap: () {
                           // pageController
                           //     .jumpToPage(semanasLimite);
@@ -61,28 +61,28 @@ class SemanarioWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                       '${[
-                        "ENE",
-                        "FEB",
-                        "MAR",
-                        "ABR",
-                        "MAY",
-                        "JUN",
-                        "JUL",
-                        "AGO",
-                        "SEP",
-                        "OCT",
-                        "Nov",
-                        "DIC"
-                      ][lunes.month - 1]} ${lunes.year}',
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                      ][lunes.month - 1]} ${lunes.year} ',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           //fontWeight: FontWeight.bold,
-                          color: colorDia)),
-                  SizedBox(height: 3),
+                          color: Colors.yellow[50])),
+                  SizedBox(height: 5),
                   Row(children: [
                     for (var d = 0, hoy = esHoy(lunes);
                         d < 5;
@@ -94,7 +94,7 @@ class SemanarioWidget extends StatelessWidget {
                             children: [
                               Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 14,
                                       //fontWeight: FontWeight.bold,
                                       color: colorDia)),
                               Container(
@@ -113,7 +113,7 @@ class SemanarioWidget extends StatelessWidget {
                                           .day
                                           .toString(),
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         color: hoy
                                             ? Theme.of(context).primaryColor
