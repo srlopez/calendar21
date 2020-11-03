@@ -56,7 +56,8 @@ class ActividadWidget extends StatelessWidget {
                   style: new TextStyle(
                       color: highlightColor(Color(actividad.color))),
                 ),
-                Expanded(child: Container(width: 0, height: 0)),
+                //Expanded(child: Container(width: 0, height: 0)),
+                Spacer(),
                 Text(
                   '${actividad.pie}',
                   overflow: TextOverflow.clip,

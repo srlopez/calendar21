@@ -1,8 +1,18 @@
+import 'package:calendar21/pages/semanario_widget.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 // import 'dart:convert';
 import '../models/actividad_model.dart';
+
+class Rango {
+  DateTime from;
+  DateTime to;
+  int tipo = 0;
+  Rango({this.tipo, this.from, this.to}) {
+    to = to == null ? from : to;
+  }
+}
 
 class HorarioData extends ChangeNotifier {
   // Repositorio File
@@ -99,7 +109,7 @@ class HorarioData extends ChangeNotifier {
     }
     horario[dia] = list;
 
-    notifyListeners();
+    //notifyListeners();
     storage.escribirHorario(horario);
   }
 
@@ -107,6 +117,7 @@ class HorarioData extends ChangeNotifier {
   /// El Bloque no está vacio (asignada==true)
   /// Se restauran tantos nuevos bloques vacíos como su size
   void quitarActividad(int dia, int iActividad, [bool save = false]) {
+    if (horario[dia][iActividad].asignada == false) return;
     assert(horario[dia][iActividad].asignada == true);
 
     var nuevaLista = <Actividad>[];
@@ -127,10 +138,31 @@ class HorarioData extends ChangeNotifier {
 
     // Si despues de 'quitar' hemos de 'guardar' evitamos save y notify
     if (save) {
-      notifyListeners();
+      //notifyListeners();
       storage.escribirHorario(horario);
     }
   }
+
+  // ^^^ Horario ============================
+
+  // vvv Semanario ============================
+  DateTime primerDia;
+  int iSemana = 54;
+
+  var excepciones = <Rango>[];
+
+  void establecerSemana(DateTime lunes, int semana) {
+    primerDia = lunes;
+    iSemana = semana;
+    print('#$iSemana $primerDia');
+    Future.delayed(Duration.zero, () async {
+      // Si no retardo un poco, me da un error
+      // https://stackoverflow.com/questions/47592301/setstate-or-markneedsbuild-called-during-build
+      notifyListeners();
+    });
+  }
+
+  // ^^^ Semanario ============================
 
   void test() {
     void testreasignaActividad(int dia, int iActividad,
@@ -248,8 +280,11 @@ class HorarioData extends ChangeNotifier {
   }
 
   // ===================   CONSTRUCTOR =======================
-  HorarioData();
-  Future init() async {
+  HorarioData() {
+    for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
+  }
+
+  Future init({bool notify = false}) async {
     print('Constructor async');
     storage = HorarioStorage();
 
@@ -264,6 +299,31 @@ class HorarioData extends ChangeNotifier {
       for (var i in List<int>.generate(5, (i) => i)) resetDia(i);
     //print('======CONSTRUCTOR =====');
     //print(horario);
+
+    var hoy = esteLunes();
+    excepciones
+      ..add(Rango(
+          tipo: 1,
+          from: hoy.add(Duration(days: 0)),
+          to: hoy.add(Duration(days: 1))))
+      ..add(Rango(
+          tipo: 2,
+          from: hoy.add(Duration(days: 2)),
+          to: hoy.add(Duration(days: 6))))
+      ..add(Rango(tipo: 1, from: hoy.add(Duration(days: 8))))
+      ..add(Rango(
+          tipo: 1,
+          from: hoy.add(Duration(days: 12)),
+          to: hoy.add(Duration(days: 22))))
+      ..add(Rango(
+          tipo: 2,
+          from: hoy.add(Duration(days: 30)),
+          to: hoy.add(Duration(days: 35))))
+      ..add(Rango(
+        tipo: 1,
+        from: hoy.add(Duration(days: 40)),
+      ));
+    if (notify) notifyListeners();
   }
 }
 

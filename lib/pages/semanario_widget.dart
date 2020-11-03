@@ -1,59 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/data.dart';
 
-class SemanarioWidget extends StatelessWidget {
+class SemanarioWidget extends StatefulWidget {
   SemanarioWidget({@required this.margin});
   final double margin;
 
+  @override
+  _SemanarioWidgetState createState() => _SemanarioWidgetState();
+}
+
+class _SemanarioWidgetState extends State<SemanarioWidget> {
   final semanasLimite = 54;
+
   final PageController pageController = PageController(initialPage: 54);
-  final colorDia = Colors.grey[300];
+
+  var _prevIndex = -1000;
 
   @override
   Widget build(BuildContext context) {
+    final data = context.select((HorarioData d) => d);
+
+    // final colorDia = Colors.grey[300];
+    // final colorBack = Theme.of(context).primaryColor;
+    final colorDia = Colors.blueGrey[700]; //.of(context).primaryColor;
+    final colorBack = Colors.grey[200];
+
     return PageView.builder(
       controller: pageController,
       itemBuilder: (context, _index) {
         final semana = _index - semanasLimite;
         var lunes = lunesDeLaSemana(semana);
+        //var data = context.read<HorarioData>();
+        if (_prevIndex != _index) {
+          _prevIndex = _index;
+          data.establecerSemana(lunes, semana);
+        }
 
         return Container(
-          color: Theme.of(context).primaryColor,
+          color: colorBack,
           child: Row(children: [
-            // Icono
+            // Icono de la izda
             SizedBox(
-              width: margin,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipOval(
-                    child: Material(
-                      color: Theme.of(context).primaryColor,
-                      child: InkWell(
-                        splashColor: colorDia, // inkwell color
-                        child: SizedBox(
-                            //width: 50,
-                            //height: 50,
-                            child: Icon(
-                          Icons.today_rounded,
-                          color: colorDia,
-                        )),
-                        onTap: () {
-                          // pageController
-                          //     .jumpToPage(semanasLimite);
-                          pageController.animateToPage(semanasLimite,
-                              curve: Curves.decelerate,
-                              duration: Duration(milliseconds: 300));
-                        },
-                      ),
-                    ),
+              width: widget.margin,
+              child: Material(
+                color: colorBack,
+                child: InkWell(
+                  splashColor: colorDia, // inkwell color
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('NOV',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: colorDia)),
+
+                      // SizedBox(
+                      //     //width: 50,
+                      //     //height: 50,
+                      //     child: Icon(
+                      //   Icons.today_rounded,
+                      //   color: colorDia,
+                      // )),
+                      Text('${lunes.year % 100}/${semanaAnual(lunes)}',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: colorDia)),
+                    ],
                   ),
-                  //SizedBox(height: 6),
-                  Text('#${semanaAnual(lunes)}',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: colorDia)),
-                ],
+                  onTap: () {
+                    // pageController
+                    //     .jumpToPage(semanasLimite);
+                    pageController.animateToPage(semanasLimite,
+                        curve: Curves.decelerate,
+                        duration: Duration(milliseconds: 300));
+                  },
+                ),
               ),
             ),
 
@@ -61,28 +85,29 @@ class SemanarioWidget extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                      '${[
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre"
-                      ][lunes.month - 1]} ${lunes.year} ',
-                      style: TextStyle(
-                          fontSize: 16,
-                          //fontWeight: FontWeight.bold,
-                          color: Colors.yellow[50])),
-                  SizedBox(height: 5),
+                  // Text(
+                  //     '${[
+                  //       "Enero",
+                  //       "Febrero",
+                  //       "Marzo",
+                  //       "Abril",
+                  //       "Mayo",
+                  //       "Junio",
+                  //       "Julio",
+                  //       "Agosto",
+                  //       "Septiembre",
+                  //       "Octubre",
+                  //       "Noviembre",
+                  //       "Diciembre"
+                  //     ][lunes.month - 1]} ${lunes.year} ',
+                  //     style: TextStyle(
+                  //         fontSize: 16,
+                  //         //fontWeight: FontWeight.bold,
+                  //         color: colorDia)),
+                  //SizedBox(height: 8),
                   Row(children: [
                     for (var d = 0, hoy = esHoy(lunes);
                         d < 5;
@@ -92,19 +117,12 @@ class SemanarioWidget extends StatelessWidget {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      //fontWeight: FontWeight.bold,
-                                      color: colorDia)),
                               Container(
                                   width: 30.0,
                                   height: 30.0,
                                   decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: hoy
-                                        ? colorDia
-                                        : Theme.of(context).primaryColor,
+                                    color: hoy ? colorDia : colorBack,
                                   ),
                                   child: Center(
                                     child: Text(
@@ -115,12 +133,15 @@ class SemanarioWidget extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: hoy
-                                            ? Theme.of(context).primaryColor
-                                            : colorDia,
+                                        color: hoy ? colorBack : colorDia,
                                       ),
                                     ),
                                   )),
+                              Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      //fontWeight: FontWeight.bold,
+                                      color: colorDia)),
                             ]),
                       ),
                   ])

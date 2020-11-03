@@ -8,7 +8,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var data = HorarioData();
-  await data.init(); //invocamos la creacion sincrona
+  //await data.init(); //invocamos la creacion sincrona
+  data.init(notify: true).then((data) {
+    // asincrona
+    print('Done');
+  });
   runApp(MyApp(data: data));
 }
 
