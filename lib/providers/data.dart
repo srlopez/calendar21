@@ -5,12 +5,15 @@ import 'dart:io';
 // import 'dart:convert';
 import '../models/actividad_model.dart';
 
-class Rango {
-  DateTime from;
-  DateTime to;
-  int tipo = 0;
-  Rango({this.tipo, this.from, this.to}) {
-    to = to == null ? from : to;
+class PNL {
+  // Periodos No Lectivos
+  int tipo = 0; // 0-Lectivo, 1-Festivo, 2-Vacación
+
+  DateTime inicio;
+  DateTime fin;
+  PNL({this.tipo, this.inicio, this.fin}) {
+    // Si nohay final, es un día inicio==final
+    fin = fin == null ? inicio : fin;
   }
 }
 
@@ -149,7 +152,7 @@ class HorarioData extends ChangeNotifier {
   DateTime primerDia;
   int iSemana = 54;
 
-  var excepciones = <Rango>[];
+  var pnl = <PNL>[];
 
   void establecerSemana(DateTime lunes, int semana) {
     primerDia = lunes;
@@ -301,27 +304,27 @@ class HorarioData extends ChangeNotifier {
     //print(horario);
 
     var hoy = esteLunes();
-    excepciones
-      ..add(Rango(
+    pnl
+      ..add(PNL(
           tipo: 1,
-          from: hoy.add(Duration(days: 0)),
-          to: hoy.add(Duration(days: 1))))
-      ..add(Rango(
+          inicio: hoy.add(Duration(days: 0)),
+          fin: hoy.add(Duration(days: 1))))
+      ..add(PNL(
           tipo: 2,
-          from: hoy.add(Duration(days: 2)),
-          to: hoy.add(Duration(days: 6))))
-      ..add(Rango(tipo: 1, from: hoy.add(Duration(days: 8))))
-      ..add(Rango(
+          inicio: hoy.add(Duration(days: 2)),
+          fin: hoy.add(Duration(days: 6))))
+      ..add(PNL(tipo: 1, inicio: hoy.add(Duration(days: 8))))
+      ..add(PNL(
           tipo: 1,
-          from: hoy.add(Duration(days: 12)),
-          to: hoy.add(Duration(days: 22))))
-      ..add(Rango(
+          inicio: hoy.add(Duration(days: 12)),
+          fin: hoy.add(Duration(days: 22))))
+      ..add(PNL(
           tipo: 2,
-          from: hoy.add(Duration(days: 30)),
-          to: hoy.add(Duration(days: 35))))
-      ..add(Rango(
+          inicio: hoy.add(Duration(days: 30)),
+          fin: hoy.add(Duration(days: 35))))
+      ..add(PNL(
         tipo: 1,
-        from: hoy.add(Duration(days: 40)),
+        inicio: hoy.add(Duration(days: 40)),
       ));
     if (notify) notifyListeners();
   }

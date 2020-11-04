@@ -6,11 +6,10 @@ import '../models/actividad_model.dart';
 import '../pages/actividad_widget.dart';
 import '../pages/semanario_widget.dart';
 import '../models/detalle_model.dart';
+import '../models/constantes_model.dart';
+
 import '../providers/data.dart';
 import 'detalle_page.dart';
-
-final gapTop = 10.0;
-final gapBottom = 20.0;
 
 class HorarioPage extends StatefulWidget {
   HorarioPage({Key key, this.title}) : super(key: key);
@@ -25,8 +24,7 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     var data = context.watch<HorarioData>();
-    final alturaSemanario = 60.0; //80.0;
-    final anchoHoras = 60.0;
+    var ctes = MisConstantes.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,11 +34,11 @@ class _HorarioPageState extends State<HorarioPage> {
         children: [
           // Semanario
           Container(
-            height: alturaSemanario,
+            height: ctes.alturaSemanario,
             //child: SemanarioWidget(margin: anchoHoras),
             child: Consumer<HorarioData>(
               builder: (context, data, child) {
-                return SemanarioWidget(margin: anchoHoras);
+                return SemanarioWidget(margin: ctes.anchoColumnaHoras);
               },
             ),
           ),
@@ -49,22 +47,21 @@ class _HorarioPageState extends State<HorarioPage> {
             height: MediaQuery.of(context).size.height -
                 MediaQuery.of(context).padding.top -
                 kToolbarHeight -
-                alturaSemanario,
-            color: Colors.grey[100],
+                ctes.alturaSemanario,
+            color: ctes.fondoHorario,
             child: Row(
               children: [
                 // Columna de HORAS
                 Container(
-                  width: anchoHoras,
+                  width: ctes.anchoColumnaHoras,
                   padding: EdgeInsets.only(right: 5),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(data.horaFormat(data.h0)),
-                      SizedBox(height: gapTop / 2),
-                      for (var i = 1,
-                              t = data.h0 +
-                                  Duration(minutes: data.segmentos[0]);
+                      SizedBox(
+                          height:
+                              ctes.separacionHorarioSuperior - ctes.ajusteText),
+                      for (var i = 0, t = data.h0;
                           i < data.segmentos.length;
                           t += Duration(minutes: data.segmentos[i++]),) ...[
                         Expanded(
@@ -74,13 +71,23 @@ class _HorarioPageState extends State<HorarioPage> {
                                 clipBehavior: Clip.none,
                                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 alignment: Alignment.topRight,
-                                //color: Colors.indigoAccent,
-                                child:
-                                    Text(data.horaFormat(t))) //Text(format(t)),
+                                child: Text(data.horaFormat(t),
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      //fontWeight: FontWeight.bold,
+                                      color: ctes.textoHorario,
+                                    ))) //Text(format(t)),
                             ),
                       ],
-                      Text(data.horaFormat(data.horaFinal())),
-                      SizedBox(height: gapBottom - 10)
+                      Text(data.horaFormat(data.horaFinal()),
+                          style: TextStyle(
+                            fontSize: 15,
+                            //fontWeight: FontWeight.bold,
+                            color: ctes.textoHorario,
+                          )),
+                      SizedBox(
+                          height:
+                              ctes.separacionHorarioSInferior - ctes.ajusteText)
                     ],
                   ),
                 ),
@@ -126,84 +133,85 @@ class ColumnaDiaria extends StatelessWidget {
     //var data = context.read<HorarioData>(); Nos obliga a camabiar a select
     //final data = context.select((HorarioData d) => d);
     final data = context.watch<HorarioData>();
+    var ctes = MisConstantes.of(context);
 
-    var tipo = data.excepciones.fold(0, (int previousValue, fechas) {
+    var tipo = data.pnl.fold(0, (int previousValue, fechas) {
       //print(
       //'$previousValue ...${fecha.day}/${fecha.month}: ${fechas.from.day}/${fechas.from.month}-${fechas.to.day}/${fechas.to.month}');
 
-      if (fecha.isAfter(fechas.from) & fecha.isBefore(fechas.to)) {
+      if (fecha.isAfter(fechas.inicio) & fecha.isBefore(fechas.fin)) {
         return max(previousValue, fechas.tipo);
       }
       return previousValue;
     });
-    print('$tipo ${fecha.day}/${fecha.month}');
+    //print('$tipo ${fecha.day}/${fecha.month}');
 
     return Expanded(
       flex: 1,
-      child: Stack(
+      child: Column(
         children: [
-          Column(
-            children: [
-              SizedBox(
-                  height: gapTop,
-                  child: Container(
-                      color: [
-                    Colors.grey[100],
-                    Colors.green,
-                    Colors.amber
-                  ][tipo])), //Gap para ajustar la hora
-              //for (var actividad in dia) ...[
-              for (var iAct = 0; iAct < actividades.length; iAct++) ...[
-                Expanded(
-                  flex: actividades[iAct].minutos,
-                  // Recubro de un detector de Gestos
-                  // al Widget de Actividad
-                  child: GestureDetector(
-                    onTap: () async {
-                      // Página de detalle
-                      //var data = context.read<HorarioData>();
-                      var detalle = Detalle(
-                          data: data,
-                          iDia: iDia,
-                          iActividad: iAct,
-                          hora:
-                              data.horaFormat(data.horaActividad(iDia, iAct)));
-                      Actividad response = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetallePage(detalle: detalle),
-                        ),
-                      );
-                      if (response != null) {
-                        //Actuamos
-                        var data = context.read<HorarioData>();
-                        data.quitarActividad(iDia, iAct, !response.asignada);
-                        if (response.asignada)
-                          data.nuevaActividad(iDia, iAct, response);
-                      }
-                    },
-                    child: ActividadWidget(actividad: actividades[iAct]),
-                  ),
-                ),
-                //Divider(height: 2)
-              ],
-              SizedBox(height: gapBottom, child: Container()), //Placeholder()),
-            ],
-          ),
-          // tipo == 1
-          //     ? SizedBox(
-          //         height: double.infinity,
-          //         width: double.infinity,
-          //         child: Container(color: Color.fromRGBO(255, 255, 255, 0.5)),
-          //       )
-          //     : tipo == 2
-          //         ? SizedBox(
-          //             height: double.infinity,
-          //             width: double.infinity,
-          //             child:
-          //                 Container(color: Color.fromRGBO(200, 200, 200, 0.5)),
-          //           )
-          //         : Container(),
+          // Nombre del Día de la SEMANA
+          Container(
+              height: ctes.separacionHorarioSuperior,
+              width: double.infinity,
+              margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
+              decoration: BoxDecoration(
+                color: [
+                  ctes.textDiaNormal,
+                  ctes.textDiaFestivo,
+                  ctes.textDiaVacacion
+                ][tipo],
+                borderRadius: BorderRadius.circular(0),
+              ),
+              //color: ctes.fondoDiaSemana,
+              child: Center(
+                child: Text(ctes.nombreDias[iDia],
+                    //textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: ctes.fondoDiaSemana)),
+              )),
+          // Aquí las Actividades
+          for (var iAct = 0; iAct < actividades.length; iAct++) ...[
+            Expanded(
+              flex: actividades[iAct].minutos,
+              // Recubro de un detector de Gestos
+              // al Widget de Actividad
+              child: GestureDetector(
+                onTap: () async {
+                  // Página de detalle
+                  //var data = context.read<HorarioData>();
+                  if (tipo > 0) return;
+
+                  var detalle = Detalle(
+                      data: data,
+                      iDia: iDia,
+                      iActividad: iAct,
+                      hora: data.horaFormat(data.horaActividad(iDia, iAct)));
+                  Actividad response = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetallePage(detalle: detalle),
+                    ),
+                  );
+                  if (response != null) {
+                    //Actuamos
+                    var data = context.read<HorarioData>();
+                    data.quitarActividad(iDia, iAct, !response.asignada);
+                    if (response.asignada)
+                      data.nuevaActividad(iDia, iAct, response);
+                  }
+                },
+                child:
+                    ActividadWidget(actividad: actividades[iAct], tipo: tipo),
+              ),
+            ),
+            //Divider(height: 2)
+          ],
+          SizedBox(
+              height: ctes.separacionHorarioSInferior,
+              child: Container()), //Placeholder()),
         ],
       ),
     );

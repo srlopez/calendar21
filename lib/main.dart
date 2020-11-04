@@ -1,3 +1,4 @@
+import 'package:calendar21/models/constantes_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HorarioPage(title: 'Flutter Demo Home Page'),
+      home: MisConstantes(child: HorarioPage(title: 'Flutter Demo Home Page')),
     );
 
     // Lo recubrimos con un Proveedor de Notificaciones

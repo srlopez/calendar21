@@ -1,34 +1,68 @@
+import 'package:calendar21/models/constantes_model.dart';
 import 'package:calendar21/widgets/color_picker.dart';
 
 import '../models/actividad_model.dart';
 import 'package:flutter/material.dart';
 
+Color lighten(Color color, [double amount = .1]) {
+  assert(amount >= 0 && amount <= 1);
+
+  final hsl = HSLColor.fromColor(color);
+  final hslLight = hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+
+  return hslLight.toColor();
+}
+
+Color darken(Color color, [double amount = .1]) {
+  assert(amount >= 0 && amount <= 1);
+
+  final hsl = HSLColor.fromColor(color);
+  final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+  return hslDark.toColor();
+}
+
 class ActividadWidget extends StatelessWidget {
-  const ActividadWidget({Key key, this.actividad}) : super(key: key);
+  const ActividadWidget({Key key, this.actividad, this.tipo}) : super(key: key);
 
   final Actividad actividad;
+  final int tipo;
 
   @override
   Widget build(BuildContext context) {
+    var ctes = MisConstantes.of(context);
+
+    var fondo =
+        actividad.asignada ? Color(actividad.color) : ctes.fondoNoActividad;
+    var texto = highlightColor(Color(actividad.color));
+
+    if (actividad.asignada) {
+      switch (tipo) {
+        case 1:
+          fondo = lighten(fondo, .3);
+          texto = lighten(fondo, .1);
+
+          break;
+        case 2:
+          fondo = darken(ctes.fondoNoActividad, .1);
+          texto = lighten(fondo, .1);
+          break;
+        default:
+      }
+      // fondo = tipo == 1 ? lighten(fondo, .3) : fondo;
+      // fondo = tipo == 2 ? darken(ctes.fondoNoActividad, .1) : fondo;
+    }
+
     return Container(
       width: double.infinity,
-      //height: 200,
       decoration: BoxDecoration(
-        color:
-            actividad.asignada ? Color(actividad.color) : Colors.blueGrey[50],
+        color: fondo,
         borderRadius: BorderRadius.circular(5),
-        // border: Border.all(
-        //   color: Colors.grey[300],
-        //   width: 1,
-        // ),
+        border: Border.all(
+          color: ctes.bordeNoActividad, //.grey[300],
+          width: actividad.asignada ? 0 : 1,
+        ),
         // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.grey[300].withOpacity(0.4),
-        //     spreadRadius: 1,
-        //     blurRadius: 1,
-        //     offset: Offset(2, 2), // changes position of shadow
-        //   ),
-        // ],
       ),
       padding: EdgeInsets.fromLTRB(5, 7, 5, 7),
       margin: EdgeInsets.only(bottom: 2),
@@ -47,22 +81,20 @@ class ActividadWidget extends StatelessWidget {
                   style: new TextStyle(
                       fontSize: 13.0,
                       //fontFamily: 'Roboto',
-                      color: highlightColor(Color(actividad.color)),
+                      color: texto,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
                   '${actividad.subtitulo}',
                   overflow: TextOverflow.clip,
-                  style: new TextStyle(
-                      color: highlightColor(Color(actividad.color))),
+                  style: new TextStyle(color: texto),
                 ),
                 //Expanded(child: Container(width: 0, height: 0)),
                 Spacer(),
                 Text(
                   '${actividad.pie}',
                   overflow: TextOverflow.clip,
-                  style: new TextStyle(
-                      color: highlightColor(Color(actividad.color))),
+                  style: new TextStyle(color: texto),
                 ),
               ],
             )

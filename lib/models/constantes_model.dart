@@ -5,7 +5,8 @@ class MisConstantes extends InheritedWidget {
   static MisConstantes of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<MisConstantes>();
 
-  const MisConstantes({Widget child, Key key}) : super(key: key, child: child);
+  //const
+  MisConstantes({Widget child, Key key}) : super(key: key, child: child);
 
   // Horario
   final separacionHorarioSuperior = 20.0;
@@ -17,8 +18,7 @@ class MisConstantes extends InheritedWidget {
   final alturaSemanario = 55.0;
 
   // Colores
-  // final colorDia = Colors.grey[300];
-  // final colorBack = Theme.of(context).primaryColor;
+  // Theme.of(context).primaryColor;
   final textoSemanario = Colors.blueGrey[900]; //.of(context).primaryColor;
   final fondoSemanario = Colors.grey[100];
 
@@ -27,8 +27,8 @@ class MisConstantes extends InheritedWidget {
 
   final fondoDiaSemana = Colors.blueGrey[50];
   final textDiaNormal = Colors.blueGrey[700];
-  final textDiaFestivo = Colors.red[600];
-  final textDiaVacacion = Colors.red[900];
+  final textDiaFestivo = Colors.red[200];
+  final textDiaVacacion = Colors.blueGrey[200];
 
   final fondoNoActividad = Colors.blueGrey[50];
   final bordeNoActividad = Colors.grey[300];

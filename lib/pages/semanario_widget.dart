@@ -1,3 +1,4 @@
+import '../models/constantes_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/data.dart';
@@ -20,11 +21,7 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
   @override
   Widget build(BuildContext context) {
     final data = context.select((HorarioData d) => d);
-
-    // final colorDia = Colors.grey[300];
-    // final colorBack = Theme.of(context).primaryColor;
-    final colorDia = Colors.blueGrey[700]; //.of(context).primaryColor;
-    final colorBack = Colors.grey[200];
+    var ctes = MisConstantes.of(context);
 
     return PageView.builder(
       controller: pageController,
@@ -38,36 +35,38 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
         }
 
         return Container(
-          color: colorBack,
+          color: ctes.fondoSemanario,
           child: Row(children: [
             // Icono de la izda
             SizedBox(
               width: widget.margin,
               child: Material(
-                color: colorBack,
+                color: Colors.grey[100], //colorBack,
                 child: InkWell(
-                  splashColor: colorDia, // inkwell color
+                  splashColor: ctes.textoSemanario,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('NOV',
+                      Text('${lunes.year % 100}',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: colorDia)),
-
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black12, //ctes.textoSemanario,
+                          )),
+                      Text(
+                          '${ctes.nombreMes[lunes.month - 1].substring(0, 3).toUpperCase()}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black12, //ctes.textoSemanario,
+                          )),
                       // SizedBox(
                       //     //width: 50,
                       //     //height: 50,
                       //     child: Icon(
                       //   Icons.today_rounded,
-                      //   color: colorDia,
+                      //   color: ctes.textoSemanario,
                       // )),
-                      Text('${lunes.year % 100}/${semanaAnual(lunes)}',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: colorDia)),
                     ],
                   ),
                   onTap: () {
@@ -88,25 +87,22 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    //Text('${ctes.nombreMes[lunes.month - 1].substring(0, 3)} '),
+                    Text('#${semanaAnual(lunes)}  ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          //fontWeight: FontWeight.bold,
+                          color: Colors.black12,
+                        ))
+                  ]),
                   // Text(
-                  //     '${[
-                  //       "Enero",
-                  //       "Febrero",
-                  //       "Marzo",
-                  //       "Abril",
-                  //       "Mayo",
-                  //       "Junio",
-                  //       "Julio",
-                  //       "Agosto",
-                  //       "Septiembre",
-                  //       "Octubre",
-                  //       "Noviembre",
-                  //       "Diciembre"
-                  //     ][lunes.month - 1]} ${lunes.year} ',
+                  //     '#${semanaAnual(lunes)} - ${ctes.nombreMes[lunes.month - 1]} - ${lunes.year} ',
                   //     style: TextStyle(
-                  //         fontSize: 16,
-                  //         //fontWeight: FontWeight.bold,
-                  //         color: colorDia)),
+                  //       fontSize: 16,
+                  //       //fontWeight: FontWeight.bold,
+                  //       color: ctes.textoSemanario,
+                  //     )),
                   //SizedBox(height: 8),
                   Row(children: [
                     for (var d = 0, hoy = esHoy(lunes);
@@ -122,7 +118,9 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
                                   height: 30.0,
                                   decoration: new BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: hoy ? colorDia : colorBack,
+                                    color: hoy
+                                        ? ctes.textoSemanario
+                                        : ctes.fondoSemanario,
                                   ),
                                   child: Center(
                                     child: Text(
@@ -131,17 +129,19 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
                                           .day
                                           .toString(),
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: hoy ? colorBack : colorDia,
+                                        color: hoy
+                                            ? ctes.fondoSemanario
+                                            : ctes.textoSemanario,
                                       ),
                                     ),
                                   )),
-                              Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      //fontWeight: FontWeight.bold,
-                                      color: colorDia)),
+                              // Text(["Lun", "Mar", "Mie", "Jue", "Vie"][d],
+                              //     style: TextStyle(
+                              //         fontSize: 14,
+                              //         //fontWeight: FontWeight.bold,
+                              //         color: colorDia)),
                             ]),
                       ),
                   ])
