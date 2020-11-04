@@ -135,16 +135,16 @@ class ColumnaDiaria extends StatelessWidget {
     final data = context.watch<HorarioData>();
     var ctes = MisConstantes.of(context);
 
-    var tipo = data.pnl.fold(0, (int previousValue, fechas) {
-      //print(
-      //'$previousValue ...${fecha.day}/${fecha.month}: ${fechas.from.day}/${fechas.from.month}-${fechas.to.day}/${fechas.to.month}');
+    var tipo = data.pnl.fold(0, (int previousValue, pnl) {
+      print(
+          '$previousValue ...${fecha.day}/${fecha.month}: ${pnl.inicio.day}/${pnl.inicio.month}-${pnl.fin.day}/${pnl.inicio.month}');
 
-      if (fecha.isAfter(fechas.inicio) & fecha.isBefore(fechas.fin)) {
-        return max(previousValue, fechas.tipo);
+      if (fecha.isAfter(pnl.inicio) && fecha.isBefore(pnl.fin)) {
+        return max(previousValue, pnl.tipo);
       }
       return previousValue;
     });
-    //print('$tipo ${fecha.day}/${fecha.month}');
+    print('$tipo ${fecha.day}/${fecha.month}');
 
     return Expanded(
       flex: 1,

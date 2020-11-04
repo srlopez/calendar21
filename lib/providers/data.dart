@@ -13,7 +13,7 @@ class PNL {
   DateTime fin;
   PNL({this.tipo, this.inicio, this.fin}) {
     // Si nohay final, es un día inicio==final
-    fin = fin == null ? inicio : fin;
+    fin = fin == null ? inicio.add(Duration(days: 1)) : fin;
   }
 }
 
@@ -305,27 +305,29 @@ class HorarioData extends ChangeNotifier {
 
     var hoy = esteLunes();
     pnl
-      ..add(PNL(
-          tipo: 1,
-          inicio: hoy.add(Duration(days: 0)),
-          fin: hoy.add(Duration(days: 1))))
-      ..add(PNL(
-          tipo: 2,
-          inicio: hoy.add(Duration(days: 2)),
-          fin: hoy.add(Duration(days: 6))))
-      ..add(PNL(tipo: 1, inicio: hoy.add(Duration(days: 8))))
-      ..add(PNL(
-          tipo: 1,
-          inicio: hoy.add(Duration(days: 12)),
-          fin: hoy.add(Duration(days: 22))))
-      ..add(PNL(
-          tipo: 2,
-          inicio: hoy.add(Duration(days: 30)),
-          fin: hoy.add(Duration(days: 35))))
-      ..add(PNL(
-        tipo: 1,
-        inicio: hoy.add(Duration(days: 40)),
-      ));
+          ..add(PNL(
+              tipo: 1, //festivo
+              inicio: hoy.add(Duration(days: 7)), //L
+              fin: hoy.add(Duration(days: 8)))) //M
+          ..add(PNL(
+              tipo: 2, // vacacion
+              inicio: hoy.add(Duration(days: 10)), //J
+              fin: hoy.add(Duration(days: 11)))) //V
+          ..add(PNL(tipo: 1, inicio: hoy.add(Duration(days: 14))))
+          ..add(PNL(tipo: 2, inicio: hoy.add(Duration(days: 18))))
+        // ..add(PNL(
+        //     tipo: 1,
+        //     inicio: hoy.add(Duration(days: 12)),
+        //     fin: hoy.add(Duration(days: 22))))
+        // ..add(PNL(
+        //     tipo: 2,
+        //     inicio: hoy.add(Duration(days: 30)),
+        //     fin: hoy.add(Duration(days: 35))))
+        // ..add(PNL(
+        //   tipo: 1,
+        //   inicio: hoy.add(Duration(days: 40)),
+        // ))
+        ;
     if (notify) notifyListeners();
   }
 }
