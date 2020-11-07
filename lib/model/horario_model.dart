@@ -13,7 +13,7 @@ class Horario {
   // ===================   CONSTRUCTOR
   Horario({var this.ldt}) {
     //
-    ldt = LineaDeTiempo();
+    ldt = ldt ?? LineaDeTiempo();
     // Almacenamiento
     storage = HorarioStorage();
     //Horario

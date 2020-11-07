@@ -40,7 +40,7 @@ class ApiSpreadsheetsProvider {
     var data = convert.jsonDecode(response.body)['data'];
 
     data.forEach((element) {
-      print(element['FIN'].toString().length);
+      //print(element['FIN'].toString().length);
       DateTime fin = element['FIN'].toString().length > 0
           ? DateTime.parse('${element['FIN']} 00:00:00.000')
           : null;
@@ -57,9 +57,9 @@ class ApiSpreadsheetsProvider {
         print('Error en ${element['DESCRIPCION']} ${element['INICIO']}');
       }
     });
-    pnls.forEach((element) {
-      print('${element.tipo}  ${element.inicio} ${element.fin}');
-    });
+    // pnls.forEach((element) {
+    //   print('${element.tipo}  ${element.inicio} ${element.fin}');
+    // });
     return pnls;
   }
 

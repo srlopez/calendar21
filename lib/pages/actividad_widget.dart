@@ -80,7 +80,7 @@ class ActividadWidget extends StatelessWidget {
                   '${actividad.titulo}',
                   overflow: TextOverflow.clip,
                   style: new TextStyle(
-                      fontSize: 13.0,
+                      fontSize: 15.0,
                       //fontFamily: 'Roboto',
                       color: texto,
                       fontWeight: FontWeight.bold),

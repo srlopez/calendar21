@@ -139,7 +139,7 @@ class _DetallePageState extends State<DetallePage> {
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    labelText: 'Ubcación',
+                    labelText: 'Ubicación',
                     icon: Icon(Icons.room),
                   ),
                 ),
