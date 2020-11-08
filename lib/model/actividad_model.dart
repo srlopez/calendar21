@@ -10,7 +10,6 @@ class Actividad {
   String pie;
   int color;
 
-  int i; //indice del segmento
   Actividad(
       [this.segmentos = 1,
       this.minutos = 0,

@@ -78,8 +78,9 @@ class Data extends Horario with ChangeNotifier {
     notifyListeners();
   }
 
-  void quitarActividadDelHorario(int iDia, int iAct, bool save) {
-    horario[iDia] = quitarActividad(horario[iDia], iAct);
+  void quitarActividadDelDia(int iDia, int iAct, bool save) {
+    var list = super.quitarActividad(horario[iDia], iAct);
+    horario[iDia] = list;
     if (save) {
       storage.escribirHorario(horario);
       notifyListeners();
@@ -87,7 +88,8 @@ class Data extends Horario with ChangeNotifier {
   }
 
   void nuevaActividadEnDelDia(int iDia, int iAct, Actividad act) {
-    horario[iDia] = super.establecerActividad(horario[iDia], iAct, act);
+    var list = super.establecerActividad(horario[iDia], iAct, act);
+    horario[iDia] = list;
     storage.escribirHorario(horario);
     notifyListeners();
   }

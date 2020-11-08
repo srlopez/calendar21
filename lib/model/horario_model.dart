@@ -42,7 +42,7 @@ class Horario {
   // Reasignamos una Actividad en un segmento horario
   List<Actividad> establecerActividad(
       List<Actividad> dia, int iActividad, Actividad act) {
-    assert(dia[iActividad].segmentos == 1); //Se reescribe una de 1 segmento
+    //assert(dia[iActividad].segmentos == 1); //Se reescribe una de 1 segmento
     assert(dia[iActividad].asignada == false); // Y que está sin asignar
     //assert((iActividad + act.segmentos) <=        dia.length); // la longitud asignado <= total actividads del día
 

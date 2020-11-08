@@ -222,10 +222,10 @@ class ColumnaDiaria extends StatelessWidget {
                         if (response != null) {
                           //Actuamos
                           var data = context.read<Data>();
-                          data.quitarActividadDelHorario(
+                          data.quitarActividadDelDia(
                               iDia, iAct, !response.asignada);
-                          if (response.asignada) {}
-                          data.nuevaActividadEnDelDia(iDia, iAct, response);
+                          if (response.asignada)
+                            data.nuevaActividadEnDelDia(iDia, iAct, response);
                         }
                       },
                 child: ActividadWidget(
