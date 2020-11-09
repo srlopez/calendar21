@@ -18,11 +18,16 @@ class _DetallePageState extends State<DetallePage> {
   int d;
   int a;
   Actividad act;
+  var patrones = <String>{};
+  var patronesl = <String>[];
 
   TextEditingController _nHuecosCtrl;
   TextEditingController _tituloCtrl;
   TextEditingController _subtituloCtrl;
   TextEditingController _pieCtrl;
+
+  int _nHuecos = 0;
+  int _nColor = 0;
 
   void initState() {
     super.initState();
@@ -32,6 +37,15 @@ class _DetallePageState extends State<DetallePage> {
     act = Actividad.fromString(horario[d][a].toString());
     // Asignamos un color inicial si es nueva
     if (!act.asignada) act.color = subColorList[subColorList.length - 1].value;
+
+    // Lista de patrones par:Title:Color =======
+    for (var i = 0; i < horario.length; i++)
+      for (var j = 0; j < horario[i].length; j++) {
+        if ((horario[i][j].asignada) & (horario[i][j].titulo != ''))
+          patrones.add('${horario[i][j].titulo}¬${horario[i][j].color}');
+      }
+    patronesl = patrones.toList();
+    // =========================
 
     _nHuecosCtrl = TextEditingController(text: act.segmentos.toString());
     _tituloCtrl = TextEditingController(text: act.titulo);
@@ -72,22 +86,64 @@ class _DetallePageState extends State<DetallePage> {
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.bold),
                 ),
-                // Slider(
-                //     value: _value.toDouble(),
-                //     min: 1.0,
-                //     max: 10.0,
-                //     divisions: 10,
-                //     activeColor: Colors.red,
-                //     inactiveColor: Colors.black,
-                //     label: 'Set a value',
-                //     onChanged: (double newValue) {
-                //       setState(() {
-                //         _value = newValue;
-                //       });
-                //     },
-                //     semanticFormatterCallback: (double newValue) {
-                //       return '${newValue.round()} dollars';
-                //     }),
+
+                // DropDwon Buttom para los huecos y colores
+                // Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //     children: [
+                //       Text('N.'),
+                //       DropdownButton(
+                //         itemHeight: 50,
+                //         value: _nHuecos,
+                //         items: <DropdownMenuItem>[
+                //           for (var i = 0; i < 3; i++)
+                //             DropdownMenuItem(
+                //                 child: Container(
+                //                   width: 60,
+                //                   padding: EdgeInsets.all(8),
+                //                   child: Text(
+                //                     '${i + 1}',
+                //                     textAlign: TextAlign.center,
+                //                   ),
+                //                 ),
+                //                 value: i)
+                //         ],
+                //         onChanged: (value) {
+                //           setState(() {
+                //             _nHuecos = value;
+                //           });
+                //         },
+                //       ),
+                //       Text('Color'),
+                //       DropdownButton(
+                //         itemHeight: 50,
+                //         value: _nColor,
+                //         items: <DropdownMenuItem>[
+                //           for (var i = 0; i < patronesl.length; i++)
+                //             DropdownMenuItem(
+                //                 child: Container(
+                //                     //height: 40,
+                //                     width: 100,
+                //                     padding: EdgeInsets.all(8),
+                //                     color: Color(
+                //                         int.parse(patronesl[i].split('¬')[1])),
+                //                     child: Text(patronesl[i].split('¬')[0],
+                //                         style: TextStyle(
+                //                             color: highlightColor(Color(
+                //                                 int.parse(patronesl[i]
+                //                                     .split('¬')[1])))))),
+                //                 value: i)
+                //         ],
+                //         onChanged: (value) {
+                //           setState(() {
+                //             _nColor = value;
+                //             act.color =
+                //                 int.parse(patronesl[value].split('¬')[1]);
+                //           });
+                //         },
+                //       ),
+                //     ]),
+
                 TextFormField(
                   controller: _nHuecosCtrl,
                   autofocus: true,
