@@ -39,12 +39,12 @@ class ActividadWidget extends StatelessWidget {
 
     if (actividad.asignada) {
       switch (tipoDia) {
-        case 1:
+        case 1: //Festivo
           fondo = lighten(fondo, .3);
           texto = lighten(fondo, .1);
 
           break;
-        case 2:
+        case 2: //Vacacion
           fondo = darken(ctes.fondoNoActividad, .1);
           texto = lighten(fondo, .1);
           break;
