@@ -43,20 +43,25 @@ class _DetallePageState extends State<DetallePage> {
     _vColor = act.color;
     _nHuecos = act.segmentos;
 
-    // Lista de patrones par:Title:Color =======
+    // Lista de horas
+
+    // Lista de patrones tuplas =======
+    var spatrones = <Tuple4<int, String, String, String>>{};
+
+    patrones = [];
     for (var i = 0; i < horario.length; i++)
       for (var j = 0; j < horario[i].length; j++) {
         if ((horario[i][j].asignada) & (horario[i][j].titulo != ''))
-          patrones.add(Tuple4(
+          spatrones.add(Tuple4(
             horario[i][j].color,
             horario[i][j].titulo,
             horario[i][j].subtitulo,
             horario[i][j].pie,
           ));
       }
-    patrones = [
-      ...{...patrones} // Solo los valores únicos
-    ]; //  patrones = patrones.toSet().toList();
+    //patrones = [ ...{...patrones} ];
+    //spatrones = patrones.toSet();
+    patrones = spatrones.toList();
     // =========================
 
     //_nHuecosCtrl = TextEditingController(text: act.segmentos.toString());
@@ -223,6 +228,7 @@ class _DetallePageState extends State<DetallePage> {
                   ),
                 ),
                 Text(''),
+                Divider(),
                 Text('Selector de Color'),
                 ColorPicker(
                   currentColor: Color(_vColor), //Color(act.color),

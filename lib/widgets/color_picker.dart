@@ -31,12 +31,12 @@ class ColorPickerState extends State<ColorPicker> {
     super.initState();
 
     if (widget.currentColor != null) {
-      _selectColor(null, widget.currentColor, false);
+      _selectColor(null, widget.currentColor);
     }
 
-    if (_subColorSelected == null) {
-      _selectColor(null, Colors.black, false);
-    }
+    // if (_subColorSelected == null) {
+    //   _selectColor(null, Colors.black, false);
+    // }
 
     mainColors = [];
     subColorList.asMap().forEach(
@@ -46,12 +46,14 @@ class ColorPickerState extends State<ColorPicker> {
     );
   }
 
-  void _selectColor(BuildContext context, Color color, bool finalColor) {
+  void _selectColor(BuildContext context, Color color, [bool state = false]) {
     iColor = max(subColorList.indexOf(color), 0);
     iMainColor = iColor ~/ 8;
 
     _mainColorSelected = subColorList[iMainColor * 8 + 4];
+    _subColorSelected = subColorList[iColor];
 
+    //if (widget.currentColor != _subColorSelected)
     setState(() {
       _subColorSelected = subColorList[iColor];
     });
@@ -62,7 +64,7 @@ class ColorPickerState extends State<ColorPicker> {
   @override
   Widget build(BuildContext context) {
     // He necesitado poner esta función cuando desde el dropdown se selecciona un color
-    _selectColor(context, widget.currentColor, true);
+    //_selectColor(context, widget.currentColor, true);
 
     var column =
         // main colors
@@ -125,7 +127,7 @@ class ColorPickerState extends State<ColorPicker> {
     children.add(GestureDetector(
       child: Container(color: color),
       onTapDown: (d) {
-        _selectColor(context, color, false);
+        _selectColor(context, color);
       },
     ));
 
@@ -164,7 +166,7 @@ class ColorPickerState extends State<ColorPicker> {
         shape: BoxShape.circle,
       )),
       onTapDown: (d) {
-        _selectColor(context, color, true);
+        _selectColor(context, color);
       },
     ));
 
@@ -183,7 +185,7 @@ class ColorPickerState extends State<ColorPicker> {
             margin: EdgeInsets.all(2.0),
           ),
           onTapDown: (d) {
-            _selectColor(context, color, true);
+            _selectColor(context, color);
           }));
     }
 
