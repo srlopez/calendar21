@@ -1,4 +1,4 @@
-import 'package:calendar21t/model/actividad_model.dart';
+import 'package:calendar21/model/actividad_model.dart';
 import 'package:test/test.dart';
 
 void main() {

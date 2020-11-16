@@ -1,9 +1,9 @@
-import 'package:calendar21t/model/actividad_model.dart';
-import 'package:calendar21t/model/diario_model.dart';
-import 'package:calendar21t/model/linea_de_tiempo_model.dart';
-import 'package:calendar21t/model/horario_model.dart';
-import 'package:calendar21t/model/no_lectivos_model.dart';
-import 'package:calendar21t/services/api_spreadsheets.dart';
+import 'package:calendar21/model/actividad_model.dart';
+import 'package:calendar21/model/diario_model.dart';
+import 'package:calendar21/model/linea_de_tiempo_model.dart';
+import 'package:calendar21/model/horario_model.dart';
+import 'package:calendar21/model/no_lectivos_model.dart';
+import 'package:calendar21/services/api_spreadsheets.dart';
 import 'package:flutter/foundation.dart';
 
 class Data extends Horario with ChangeNotifier {

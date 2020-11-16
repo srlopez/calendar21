@@ -1,6 +1,6 @@
-import 'package:calendar21t/model/constantes_model.dart';
-import 'package:calendar21t/model/actividad_model.dart';
-import 'package:calendar21t/widgets/color_picker.dart';
+import 'package:calendar21/model/constantes_model.dart';
+import 'package:calendar21/model/actividad_model.dart';
+import 'package:calendar21/widgets/color_picker.dart';
 
 import 'package:flutter/material.dart';
 

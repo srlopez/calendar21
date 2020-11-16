@@ -1,5 +1,5 @@
-import 'package:calendar21t/model/linea_de_tiempo_model.dart';
-import 'package:calendar21t/services/storage_horario.dart';
+import 'package:calendar21/model/linea_de_tiempo_model.dart';
+import 'package:calendar21/services/storage_horario.dart';
 
 import 'actividad_model.dart';
 

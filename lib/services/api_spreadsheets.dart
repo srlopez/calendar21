@@ -1,7 +1,7 @@
 import 'dart:convert' as convert;
-import 'package:calendar21t/model/diario_model.dart';
-import 'package:calendar21t/model/linea_de_tiempo_model.dart';
-import 'package:calendar21t/model/no_lectivos_model.dart';
+import 'package:calendar21/model/diario_model.dart';
+import 'package:calendar21/model/linea_de_tiempo_model.dart';
+import 'package:calendar21/model/no_lectivos_model.dart';
 import 'package:http/http.dart' as http;
 
 class ApiSpreadsheetsProvider {

@@ -1,4 +1,4 @@
-import 'package:calendar21t/provider/app_provider.dart';
+import 'package:calendar21/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 
 class Detalle {

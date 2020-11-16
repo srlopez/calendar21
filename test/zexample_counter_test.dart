@@ -1,4 +1,4 @@
-import 'package:calendar21t/model/counter_model.dart';
+import 'package:calendar21/model/counter_model.dart';
 import 'package:test/test.dart';
 
 void main() {

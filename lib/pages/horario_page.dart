@@ -1,6 +1,6 @@
-import 'package:calendar21t/model/actividad_model.dart';
-import 'package:calendar21t/model/detalle_model.dart';
-import 'package:calendar21t/provider/app_provider.dart';
+import 'package:calendar21/model/actividad_model.dart';
+import 'package:calendar21/model/detalle_model.dart';
+import 'package:calendar21/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';

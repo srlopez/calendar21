@@ -61,6 +61,9 @@ class ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
+    // He necesitado poner esta función cuando desde el dropdown se selecciona un color
+    _selectColor(context, widget.currentColor, true);
+
     var column =
         // main colors
         Column(children: <Widget>[

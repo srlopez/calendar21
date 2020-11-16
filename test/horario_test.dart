@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:calendar21t/model/actividad_model.dart';
-import 'package:calendar21t/model/horario_model.dart';
-import 'package:calendar21t/services/api_spreadsheets.dart';
+import 'package:calendar21/model/actividad_model.dart';
+import 'package:calendar21/model/horario_model.dart';
+import 'package:calendar21/services/api_spreadsheets.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 

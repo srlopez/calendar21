@@ -1,5 +1,5 @@
-import 'package:calendar21t/provider/app_provider.dart';
-import 'package:calendar21t/model/constantes_model.dart';
+import 'package:calendar21/provider/app_provider.dart';
+import 'package:calendar21/model/constantes_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
