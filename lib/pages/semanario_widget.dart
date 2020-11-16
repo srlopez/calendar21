@@ -1,7 +1,6 @@
 import 'package:calendar21/provider/app_provider.dart';
 import 'package:calendar21/model/constantes_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SemanarioWidget extends StatefulWidget {
   SemanarioWidget({@required this.margin, this.data});
@@ -51,20 +50,20 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
                 child: InkWell(
                   splashColor: ctes.textoSemanario,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('${lunes.year % 100}',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black12, //ctes.textoSemanario,
-                          )),
                       Text(
                           '${ctes.nombreMes[lunes.month - 1].substring(0, 3).toUpperCase()}',
                           style: TextStyle(
-                            fontSize: 18,
+                            //fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black12, //ctes.textoSemanario,
+                            color: ctes.textDiaNormal,
+                          )),
+                      Text('${lunes.year}',
+                          style: TextStyle(
+                            //fontSize: 20,
+                            //fontWeight: FontWeight.bold,
+                            color: ctes.textDiaNormal,
                           )),
                       // SizedBox(
                       //     //width: 50,
@@ -122,7 +121,7 @@ class _SemanarioWidgetState extends State<SemanarioWidget> {
                               Container(
                                   width: 30.0,
                                   height: 30.0,
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: hoy
                                         ? ctes.textoSemanario

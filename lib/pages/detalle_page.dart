@@ -55,7 +55,7 @@ class _DetallePageState extends State<DetallePage> {
           ));
       }
     patrones = [
-      ...{...patrones}
+      ...{...patrones} // Solo los valores únicos
     ]; //  patrones = patrones.toSet().toList();
     // =========================
 

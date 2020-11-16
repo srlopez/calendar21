@@ -39,8 +39,8 @@ class MyApp extends StatelessWidget {
         future: _initFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return MisConstantes(
-                child: HorarioPage(title: 'Flutter Demo Home Page'));
+            return MisConstantes(child: HorarioPage(title: 'Mi Horario'));
+            //child: HorarioPage(title: 'Flutter Demo Home Page'));
 
             //return HorarioPage(title: 'Flutter Demo Home Page');
             //return MyHomePage(title: 'Flutter Demo Home Page');
