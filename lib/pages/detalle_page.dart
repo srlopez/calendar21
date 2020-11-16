@@ -103,7 +103,7 @@ class _DetallePageState extends State<DetallePage> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('N.'),
+                      Text('N.Huecos'),
                       DropdownButton(
                         itemHeight: 50,
                         value: _nHuecos,
