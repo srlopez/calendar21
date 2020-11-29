@@ -8,12 +8,14 @@ const double baseMargin = 15.0;
 class ColorPicker extends StatefulWidget {
   ColorPicker(
       {this.onSelected,
+      this.onForceSetState,
       this.boxesHeight,
       this.spacing,
       this.margin,
       this.currentColor});
 
   final Function onSelected;
+  final Function onForceSetState;
   final double boxesHeight;
   final double spacing;
   final double margin;
@@ -44,17 +46,21 @@ class ColorPickerState extends State<ColorPicker> {
         if (i % 8 == 4) mainColors.add(value);
       },
     );
+    widget.onForceSetState((Color color) {
+      //Indico una funcion que se ejecutará cuando sea invocada desde el padre
+      // y obloga a refrescarse
+      _selectColor(context, color);
+    });
   }
 
-  void _selectColor(BuildContext context, Color color, [bool state = false]) {
+  void _selectColor(BuildContext context, Color color) {
     iColor = max(subColorList.indexOf(color), 0);
     iMainColor = iColor ~/ 8;
 
-    _mainColorSelected = subColorList[iMainColor * 8 + 4];
-    _subColorSelected = subColorList[iColor];
-
     //if (widget.currentColor != _subColorSelected)
+
     setState(() {
+      _mainColorSelected = subColorList[iMainColor * 8 + 4];
       _subColorSelected = subColorList[iColor];
     });
 
@@ -63,9 +69,6 @@ class ColorPickerState extends State<ColorPicker> {
 
   @override
   Widget build(BuildContext context) {
-    // He necesitado poner esta función cuando desde el dropdown se selecciona un color
-    //_selectColor(context, widget.currentColor, true);
-
     var column =
         // main colors
         Column(children: <Widget>[

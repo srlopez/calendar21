@@ -30,6 +30,7 @@ class _DetallePageState extends State<DetallePage> {
 
   int _nHuecos = 0;
   int _vColor = 0;
+  Function _setState;
 
   void initState() {
     super.initState();
@@ -165,7 +166,7 @@ class _DetallePageState extends State<DetallePage> {
                                 _subtituloCtrl.text = patrones[i].item3;
                                 _pieCtrl.text = patrones[i].item4;
                               }
-
+                            _setState(Color(_vColor));
                             //int.parse(patronesl[value].split('¬')[1]);
                           });
                         },
@@ -232,6 +233,9 @@ class _DetallePageState extends State<DetallePage> {
                 Text('Selector de Color'),
                 ColorPicker(
                   currentColor: Color(_vColor), //Color(act.color),
+                  onForceSetState: (f) {
+                    _setState = f;
+                  },
                   onSelected: (color) {
                     _vColor = color.value;
                     act.color = color.value;
